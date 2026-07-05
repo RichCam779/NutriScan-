@@ -72,28 +72,39 @@ def load_documents(docs_path: str) -> list:
 def split_documents(documents: list) -> list:
     """
     Divide los documentos en chunks más pequeños.
-
-    RecursiveCharacterTextSplitter intenta dividir por:
-    párrafos → oraciones → palabras → caracteres
-    Esto preserva mejor el contexto semántico.
-
-    Args:
-        documents: Lista de Document de LangChain
-
-    Returns:
-        Lista de chunks (también objetos Document)
+    Usa división estricta por \n\n para archivos .txt para mantener preguntas y respuestas juntas,
+    y división estándar para otros tipos de archivos (.pdf).
     """
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=settings.CHUNK_SIZE,        # Máximo de caracteres por chunk
-        chunk_overlap=settings.CHUNK_OVERLAP,  # Caracteres compartidos entre chunks
+    txt_docs = [d for d in documents if d.metadata.get("source", "").lower().endswith(".txt")]
+    other_docs = [d for d in documents if not d.metadata.get("source", "").lower().endswith(".txt")]
+
+    # Splitter para FAQs (.txt) - mantiene cada Q&A como un único chunk semántico
+    txt_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=0,
         length_function=len,
-        separators=["\n\n", "\n", ". ", " ", ""],  # Prioridad de separadores
+        separators=["\n\n"],
     )
 
-    chunks = text_splitter.split_documents(documents)
-    print(f"  Documentos divididos en {len(chunks)} chunks")
-    print(f"   Tamaño por chunk: ~{settings.CHUNK_SIZE} caracteres")
-    print(f"   Solapamiento: {settings.CHUNK_OVERLAP} caracteres")
+    # Splitter estándar para PDFs
+    other_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=settings.CHUNK_SIZE,
+        chunk_overlap=settings.CHUNK_OVERLAP,
+        length_function=len,
+        separators=["\n\n", "\n", ". ", " ", ""],
+    )
+
+    chunks = []
+    if txt_docs:
+        txt_chunks = txt_splitter.split_documents(txt_docs)
+        chunks.extend(txt_chunks)
+        print(f"  TXT divididos en {len(txt_chunks)} chunks estricto por parrafos.")
+    if other_docs:
+        other_chunks = other_splitter.split_documents(other_docs)
+        chunks.extend(other_chunks)
+        print(f"  PDF divididos en {len(other_chunks)} chunks estandard.")
+
+    print(f"  Total: {len(chunks)} chunks creados.")
     return chunks
 
 def create_vector_store(chunks: list) -> Chroma:
@@ -122,7 +133,20 @@ def create_vector_store(chunks: list) -> Chroma:
     )
 
     # Crea o actualiza la base de datos vectorial
-    # Si ya existe la colección, la REEMPLAZA por completo
+    try:
+        db_temp = Chroma(
+            persist_directory=settings.CHROMA_DB_PATH,
+            embedding_function=embeddings,
+            collection_name=settings.CHROMA_COLLECTION_NAME
+        )
+        existing_data = db_temp.get()
+        existing_ids = existing_data.get('ids', [])
+        if existing_ids:
+            db_temp.delete(ids=existing_ids)
+            print(f"   [Clean] Se eliminaron {len(existing_ids)} vectores obsoletos de la coleccion.")
+    except Exception as e:
+        print(f"   [Clean] No se pudo limpiar la coleccion (puede ser la primera ejecucion): {e}")
+
     vector_store = Chroma.from_documents(
         documents=chunks,
         embedding=embeddings,

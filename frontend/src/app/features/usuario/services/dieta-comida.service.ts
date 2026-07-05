@@ -80,6 +80,9 @@ export class DietaComidaService {
   // --- Historial de comidas por fecha ---
   private _historialComidas = signal<{ [fecha: string]: Comida[] }>(generarHistorial());
 
+  /** Expone el historial completo como readonly para cálculos externos (reportes, etc.) */
+  readonly historialComidas = (() => this._historialComidas());
+
   // Fecha actualmente seleccionada para ver (por defecto hoy)
   readonly fechaSeleccionada = signal<string>(fechaClave(new Date()));
 

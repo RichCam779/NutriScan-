@@ -1,0 +1,203 @@
+NUTRISCAN - BASE DE CONOCIMIENTO EXTENDIDA
+PREGUNTAS FRECUENTES Y CONSULTAS DE USO REAL DEL SISTEMA
+Versión 2.0 - Módulo de Asistencia Inteligente (NutriBot)
+
+Este documento contiene preguntas reales que los pacientes hacen durante el uso cotidiano
+del sistema, junto con respuestas detalladas y orientadas a la práctica diaria.
+
+═══════════════════════════════════════════════════════════════
+SECCIÓN 1: ALIMENTACIÓN DIARIA Y CONTROL CALÓRICO
+═══════════════════════════════════════════════════════════════
+
+P: ¿Cuántas calorías debo comer al día para bajar de peso?
+R: El número de calorías para perder peso depende de tu metabolismo basal y tu nivel de actividad física. Como regla general, se recomienda un déficit de entre 300 y 500 kcal por debajo de tu gasto energético total. Por ejemplo, si tu cuerpo gasta 2000 kcal al día, consumir entre 1500 y 1700 kcal te permitirá perder aproximadamente 0.3 a 0.5 kg por semana de forma segura y sostenida. NutriScan calcula este número personalizado basándose en tu edad, peso, altura y nivel de actividad registrados en tu perfil.
+
+P: ¿Qué pasa si me paso de mis calorías un día?
+R: Un día puntual fuera de tu meta no arruina tu progreso. El cuerpo regula su energía a lo largo de semanas, no de horas. Lo importante es el balance calórico semanal. Si hoy te excediste en 400 kcal, puedes compensarlo distribuyendo ese pequeño exceso entre los días siguientes sin hacer restricciones extremas. NutriScan te muestra tu progreso semanal en la sección de Reportes para que tengas esta visión completa.
+
+P: ¿Cuántas comidas debo hacer al día?
+R: No existe un número mágico. Lo que importa es el total calórico y la calidad nutricional del día completo. Sin embargo, distribución en 3 comidas principales (desayuno, almuerzo y cena) con 1 o 2 meriendas saludables ayuda a mantener el metabolismo activo y reducir la ansiedad. NutriScan te permite registrar desayuno, almuerzo, cena y merienda por separado para llevar un control preciso de cada ingesta.
+
+P: ¿Es malo saltarme el desayuno?
+R: Saltarse el desayuno no es inherentemente malo si tu cuerpo lo tolera bien (como en el ayuno intermitente 16/8). Sin embargo, para la mayoría de personas, el desayuno ayuda a regular el apetito durante el día, mejorar la concentración y mantener niveles estables de azúcar en sangre. Si decides saltártelo, asegúrate de que el resto de tus comidas cubran tus metas de macronutrientes. Consulta con tu nutricionista asignado en NutriScan para personalizar este enfoque.
+
+P: ¿Puedo comer carbohidratos si quiero perder peso?
+R: Sí, absolutamente. Los carbohidratos no son el enemigo. La clave está en elegir carbohidratos de calidad: arroz integral, avena, yuca, plátano verde, legumbres y vegetales. Estos aportan fibra, vitaminas y energía sostenida. Lo que se debe reducir son los carbohidratos refinados (azúcar blanca, pan blanco, bebidas azucaradas, ultraprocessados) que tienen alta densidad calórica y poca nutrición. NutriScan registra tus carbohidratos diarios para ayudarte a mantenerte dentro de tu rango.
+
+P: ¿Qué tan rápido puedo perder peso de forma segura?
+R: La pérdida de peso saludable y sostenible es de entre 0.5 y 1 kg por semana. Perder más rápido implica riesgo de perder masa muscular, desnutrición y efecto rebote. Ritmos agresivos de pérdida (más de 1.5 kg por semana) no son recomendables sin supervisión médica. La constancia durante semanas es más efectiva que restricciones extremas a corto plazo. NutriScan te muestra tu progreso mensual en los reportes para mantenerte motivado con avances reales.
+
+P: ¿Qué es el déficit calórico y cómo lo calculo?
+R: El déficit calórico ocurre cuando consumes menos energía de la que tu cuerpo necesita para funcionar. Se calcula así: (Tu Gasto Energético Total) - (Calorías Consumidas) = Déficit. NutriScan calcula tu Gasto Energético Total (GET) usando la fórmula de Mifflin-St Jeor aplicada a tus datos de perfil (edad, peso, altura, biotipo) y lo compara con lo que registras cada día para mostrarte si estás en déficit, equilibrio o superávit.
+
+═══════════════════════════════════════════════════════════════
+SECCIÓN 2: ALIMENTOS ESPECÍFICOS - DUDAS COMUNES
+═══════════════════════════════════════════════════════════════
+
+P: ¿El plátano engorda?
+R: El plátano maduro contiene aproximadamente 89 kcal por 100g, lo que es moderado. Tiene azúcares naturales, potasio, vitamina B6 y fibra. No engorda por sí solo; todo depende de tu balance calórico total del día. Es una excelente opción como merienda pre-entreno por su energía rápida, o como postre natural. Una unidad mediana equivale a unas 100-120 kcal. Lo puedes registrar en NutriScan en la sección de Merienda.
+
+P: ¿El aguacate tiene muchas calorías?
+R: Sí, el aguacate es calóricamente denso: 100g aportan aproximadamente 160 kcal. Pero sus grasas son principalmente monoinsaturadas (grasas saludables), igual que el aceite de oliva, beneficiosas para el corazón y la saciedad. Media pechuga de aguacate al día es perfectamente compatible con cualquier plan de alimentación saludable. Lo importante es no excederse en la porción (un cuarto o medio aguacate es suficiente por comida).
+
+P: ¿Qué diferencia hay entre el arroz blanco y el arroz integral?
+R: El arroz integral conserva el salvado y el germen del grano, lo que le aporta más fibra (3x más), más vitaminas del grupo B, más magnesio y zinc. Tiene índice glucémico más bajo, lo que significa que eleva el azúcar en sangre más lentamente y da más saciedad. El arroz blanco ha sido refinado y pierde estos nutrientes. Calóricamente son similares (130 kcal por 100g cocido), pero el integral es nutricionalmente superior. NutriScan tiene ambas opciones en su catálogo de alimentos.
+
+P: ¿Puedo tomar café? ¿El café tiene calorías?
+R: El café negro puro tiene prácticamente 0 calorías (1-2 kcal por taza). Es una bebida permitida en cualquier plan nutricional y tiene efectos positivos en el metabolismo. El problema son los acompañantes: crema, azúcar, leche entera o jarabes pueden sumar entre 100 y 400 kcal por vaso. Si tomas café, regístralo junto con todo lo que le añades para tener un conteo preciso.
+
+P: ¿Es bueno tomar proteína en polvo?
+R: Los suplementos de proteína en polvo (whey, caseína, vegetal) son seguros y útiles cuando no alcanzas tu meta proteica diaria solo con la alimentación. No son mágicos ni necesarios si tu dieta ya es completa. Se recomienda 1.6 a 2.2 g de proteína por kg de peso corporal si haces ejercicio de fuerza. Primero intenta cubrir esta meta con alimentos reales (pollo, huevo, legumbres, atún). El suplemento es solo eso: un suplemento.
+
+P: ¿Qué tan malo es el azúcar?
+R: El azúcar refinada añadida en exceso es uno de los principales problemas de la alimentación moderna. Aporta calorías vacías (sin vitaminas ni minerales), eleva la glucosa en sangre rápidamente y genera ciclos de hambre/ansiedad. La OMS recomienda que el azúcar libre no supere el 10% de las calorías diarias totales (idealmente menos del 5%). En una dieta de 2000 kcal, eso es máximo 50g de azúcar libre al día. Los azúcares naturales de frutas y lácteos son diferentes y no se cuentan igual.
+
+P: ¿Qué alimentos son buenos antes y después de entrenar?
+R: Antes de entrenar (30-60 min): carbohidratos de digestión rápida como plátano, arroz blanco, pan tostado, o avena. Ayudan a tener energía disponible durante el ejercicio. Después de entrenar (dentro de los 30-60 min): proteínas + carbohidratos para reparar el músculo y reponer glucógeno. Ejemplos: pollo + arroz, huevos + pan integral, yogur + frutas, o un batido de proteína + plátano. Este es el momento más importante para la recuperación muscular.
+
+P: ¿Cuánta agua debo tomar al día?
+R: La recomendación general es de 35 ml por kg de peso corporal al día. Para una persona de 70 kg, eso equivale a 2.45 litros diarios. Sin embargo, si haces ejercicio intenso o vives en clima cálido, puedes necesitar hasta 3-4 litros. El agua no tiene calorías, ayuda a la digestión, regula la temperatura corporal y reduce la sensación de hambre. Muchas veces confundimos sed con hambre. Beber un vaso de agua antes de las comidas ayuda a comer menos.
+
+═══════════════════════════════════════════════════════════════
+SECCIÓN 3: PROTEÍNAS, GRASAS Y MACRONUTRIENTES
+═══════════════════════════════════════════════════════════════
+
+P: ¿Cuánta proteína necesito al día?
+R: Las necesidades proteicas dependen de tu nivel de actividad física. Para una persona sedentaria: 0.8g por kg de peso. Para actividad moderada: 1.2 a 1.6g por kg. Para deporte de fuerza o musculación: 1.6 a 2.2g por kg. Ejemplo: si pesas 70 kg y entrenas con pesas 4 veces por semana, necesitas entre 112 y 154g de proteína al día. Alimentos ricos en proteína: pollo (27g/100g), atún (25g/100g), huevo (6g por unidad), lentejas (9g/100g cocidas), queso cottage (11g/100g).
+
+P: ¿Las grasas engordan?
+R: Las grasas son el macronutriente más calórico (9 kcal por gramo, vs 4 kcal por gramo de proteínas y carbohidratos), por eso en exceso sí contribuyen a ganar peso. Pero son esenciales para el organismo: absorción de vitaminas A, D, E y K, producción de hormonas, salud cerebral y cardiovascular. Las grasas saludables (aguacate, aceite de oliva, nueces, salmón) son beneficiosas en cantidades moderadas. Las que se deben evitar son las grasas trans (frituras industriales, margarinas, ultraprocesados).
+
+P: ¿Qué son los macronutrientes y para qué sirven?
+R: Los macronutrientes son los tres grupos principales de nutrientes que el cuerpo necesita en grandes cantidades:
+- Carbohidratos (4 kcal/g): Son la principal fuente de energía del cerebro y los músculos.
+- Proteínas (4 kcal/g): Construyen y reparan tejidos, músculos, enzimas y hormonas.
+- Grasas (9 kcal/g): Protegen órganos, producen hormonas y absorben vitaminas liposolubles.
+Una dieta equilibrada típica distribuye: 45-65% carbohidratos, 15-35% proteínas, 20-35% grasas. NutriScan te muestra el desglose de macros de tu plan nutricional asignado por tu nutricionista.
+
+P: ¿Qué diferencia hay entre proteínas animales y vegetales?
+R: Las proteínas animales (carne, pollo, pescado, huevo, lácteos) son "completas": contienen todos los aminoácidos esenciales en proporciones adecuadas. Las proteínas vegetales (legumbres, soja, quinoa) suelen ser "incompletas" pero se pueden combinar para lograr el perfil completo. Ejemplo clásico: arroz + lentejas. La quinoa y la soja son excepciones: son proteínas vegetales completas. Para veganos y vegetarianos es fundamental combinar fuentes diversas a lo largo del día.
+
+═══════════════════════════════════════════════════════════════
+SECCIÓN 4: BIOTIPOS Y METABOLISMO
+═══════════════════════════════════════════════════════════════
+
+P: ¿Qué es el biotipo y cómo afecta mi alimentación?
+R: El biotipo es la clasificación de la estructura corporal natural de una persona. Hay tres tipos principales:
+- Ectomorfo: Complexión delgada y estrecha, metabolismo rápido, dificultad para ganar peso y músculo. Necesita mayor ingesta calórica y de carbohidratos.
+- Mesomorfo: Complexión atlética y musculada, responde bien al ejercicio, gana músculo con relativa facilidad. Metabolismo equilibrado.
+- Endomorfo: Complexión más grande y redondeada, tendencia a acumular grasa, metabolismo más lento. Requiere mayor control calórico y de carbohidratos.
+NutriScan utiliza tu biotipo registrado en el perfil para ajustar las recomendaciones de tu plan nutricional.
+
+P: Soy ectomorfo y no puedo subir de peso. ¿Qué hago?
+R: Para un ectomorfo que quiere ganar masa, las claves son: 1) Superávit calórico controlado: come entre 300-500 kcal más de lo que gastas. 2) Alta ingesta de proteínas: mínimo 2g por kg de peso. 3) Carbohidratos complejos abundantes: arroz, avena, pasta integral, papa. 4) Comidas frecuentes: 5-6 ingestas al día puede ser difícil para el estómago pequeño típico de los ectomorfos, así que incluye snacks densos (nueces, mantequilla de maní, aguacate, batidos caseros). 5) Entrenamiento de fuerza para que las calorías extra vayan al músculo, no solo a la grasa. La consistencia durante meses es la clave.
+
+P: Soy endomorfo y me cuesta mucho bajar de peso. ¿Es normal?
+R: Sí, es completamente normal. Los endomorfos tienen un metabolismo naturalmente más eficiente (el cuerpo almacena energía con más facilidad). No significa que sea imposible, sino que requiere más disciplina y paciencia. Estrategias efectivas: 1) Déficit calórico moderado (no extremo): 300-400 kcal menos al día. 2) Reducir carbohidratos refinados y azúcares. 3) Priorizar proteínas y verduras en cada comida. 4) Entrenamiento combinado: cardio + fuerza. 5) Paciencia: los resultados tardarán más que en otros biotipos, pero son igual de posibles y sostenibles.
+
+P: ¿Qué es el metabolismo basal?
+R: El metabolismo basal (TMB) es la cantidad mínima de calorías que tu cuerpo necesita para mantener sus funciones vitales en completo reposo: respirar, bombear sangre, mantener la temperatura corporal, funcionar los órganos. Representa entre el 60-75% de tu gasto energético total. Se calcula con fórmulas como Mifflin-St Jeor o Harris-Benedict, considerando peso, altura, edad y sexo. NutriScan usa estos datos de tu perfil para estimar tu gasto diario real y configurar tu meta calórica de forma personalizada.
+
+═══════════════════════════════════════════════════════════════
+SECCIÓN 5: EJERCICIO Y NUTRICIÓN DEPORTIVA
+═══════════════════════════════════════════════════════════════
+
+P: ¿Debo ajustar mi alimentación los días que entreno?
+R: Sí, los días de entrenamiento intenso tu cuerpo gasta más energía y necesita más combustible, especialmente carbohidratos para el rendimiento y proteínas para la recuperación muscular. Puedes aumentar tu ingesta entre 200-400 kcal adicionales en días de entrenamiento intenso. Los días de descanso, una ingesta ligeramente menor es perfectamente válida. Escucha las señales de tu cuerpo: mayor hambre en días de entrenamiento es completamente normal y no debes ignorarla.
+
+P: ¿Cuánto tiempo después de entrenar debo comer?
+R: La "ventana anabólica" o periodo óptimo de recuperación está en los 30-90 minutos post-entreno. En ese tiempo, consume proteínas + carbohidratos para maximizar la síntesis proteica muscular y reponer glucógeno. Sin embargo, si no es posible comer en ese momento, tampoco es catastrófico: el cuerpo sigue siendo receptivo hasta 2-3 horas después del ejercicio. Lo más importante es que la comida post-entreno llegue ese mismo día, no que sea exactamente en los primeros 30 minutos.
+
+P: ¿El cardio quema más grasa que las pesas?
+R: El cardio quema más calorías durante la sesión misma, pero el entrenamiento de fuerza (pesas) tiene ventajas a largo plazo: incrementa la masa muscular, que a su vez eleva el metabolismo basal (quemas más calorías incluso en reposo). La combinación de ambos tipos de entrenamiento es la estrategia más efectiva para la composición corporal. Para pérdida de grasa general: 3-4 días de fuerza + 2-3 días de cardio moderado es un punto de partida excelente.
+
+P: ¿Qué ejercicio es mejor para bajar de panza?
+R: No existe el concepto de "reducción localizada" de grasa. No puedes elegir de dónde pierde grasa tu cuerpo haciendo abdominales. La grasa abdominal se reduce cuando el déficit calórico total del cuerpo elimina grasa de forma progresiva, y la zona donde se acumula primero tiende a ser la última en reducirse. Lo que sí funciona: déficit calórico consistente + ejercicio cardiovascular + entrenamiento de fuerza. El abdomen visible llega cuando el porcentaje de grasa corporal total baja lo suficiente.
+
+═══════════════════════════════════════════════════════════════
+SECCIÓN 6: GESTIÓN DE ANTOJOS Y HÁBITOS
+═══════════════════════════════════════════════════════════════
+
+P: Tengo muchos antojos de dulce. ¿Cómo los controlo?
+R: Los antojos de azúcar suelen tener causas identificables: 1) No comer suficiente proteína y fibra en las comidas principales (hacen que el azúcar en sangre suba y baje bruscamente). 2) Deshidratación (muchas veces la sed se interpreta como ganas de comer). 3) Falta de sueño (eleva la ghrелина, hormona del hambre). 4) Estrés crónico (el cortisol aumenta el apetito por alimentos calóricos). Estrategias: Beber agua antes de ceder al antojo, comer fruta fresca, tener opciones saludables prepreparadas, y no eliminar el dulce al 100% porque la restricción extrema genera más ansiedad.
+
+P: ¿Qué hago cuando salgo a comer afuera y no sé cuántas calorías tiene la comida?
+R: Cuando comes fuera, aplica estas estrategias: 1) Prioriza proteínas y verduras como base del plato. 2) Pide salsas y aderezos aparte para controlar la cantidad. 3) Evita refrescos azucarados (elige agua o jugos naturales sin azúcar). 4) Una porción de proteína del tamaño de tu palma, carbohidratos como el tamaño de tu puño, y verduras abundantes. 5) Si no puedes registrar el alimento exacto en NutriScan, busca el más similar en el catálogo. La precisión perfecta no siempre es posible; lo importante es la consistencia general.
+
+P: ¿Es malo comer tarde en la noche?
+R: El cuerpo no distingue el reloj al momento de procesar calorías. El problema real de comer tarde es que: 1) Se tiende a comer en exceso porque es el momento de relajación después del día. 2) Los alimentos nocturnos suelen ser menos saludables (snacks, dulces, comida rápida). 3) Cenar muy pesado puede afectar la calidad del sueño. Si tu plan calórico del día está controlado, cenar a las 10pm no es intrínsecamente malo. Sin embargo, cenar temprano y no picar después mejora la digestión y el sueño para la mayoría de personas.
+
+P: ¿Cómo puedo comer más vegetales si no me gustan?
+R: Estrategias para incluir vegetales sin que se sientan como un castigo: 1) Incorporarlos en preparaciones que ya te gustan: sopas, guisos, pastas, salsas. 2) Cambiar la forma de cocción: los vegetales asados o salteados tienen un sabor muy diferente a los hervidos. 3) Empezar por los que más te agradan y ampliar gradualmente. 4) Mezclarlos en batidos (espinacas con frutas no se saborean pero sí se absorben). 5) Condimentarlos bien con especias, ajo, limón o aceite de oliva. El objetivo es 5 porciones de frutas y verduras al día.
+
+═══════════════════════════════════════════════════════════════
+SECCIÓN 7: USO DEL APLICATIVO NUTRISCAN
+═══════════════════════════════════════════════════════════════
+
+P: ¿Cómo registro lo que comí en NutriScan?
+R: En el Paso 1 de tu panel tienes dos opciones: 1) Escaneo con IA: presiona el botón del tipo de comida (Desayuno, Almuerzo, Cena o Merienda) y la cámara analizará tu plato detectando el alimento automáticamente. Confirma el resultado y se registra automáticamente. 2) Registro manual: usa el botón "Añadir" en la sección de Registro de Comidas y busca el alimento en el catálogo. Selecciónalo y se agrega a tu registro del día. Todo lo que registras actualiza en tiempo real tu progreso calórico del círculo de avance.
+
+P: ¿Cómo veo mi reporte de la semana?
+R: Ve al Paso 2 de tu panel (clic en "Reporte" en la barra de navegación superior) y selecciona "Semana" en los botones de periodo. Verás: total de calorías consumidas en los últimos 7 días, tu meta calórica del periodo, el porcentaje de cumplimiento, cuántos días tuviste registros y cuántos no, y el desglose detallado de cada alimento con fecha, tipo de comida y calorías. También puedes descargar este reporte como PDF usando el botón correspondiente.
+
+P: ¿Cómo descargo mi reporte en PDF?
+R: En el Paso 2 (Reporte), después de seleccionar el periodo (Día, Semana o Mes), presiona el botón "PDF" en la esquina superior derecha. El sistema generará automáticamente un documento con tu nombre, fecha, resumen de consumo vs meta, y el desglose detallado de alimentos. El archivo se descargará directamente en tu dispositivo con el nombre NutriScan_Reporte_[periodo]_[fecha].pdf.
+
+P: ¿Qué hace el NutriBot y cómo lo uso?
+R: NutriBot es tu asistente inteligente de nutrición, ubicado en el Paso 3 de tu panel. Funciona de dos formas complementarias: 1) Responde preguntas sobre tus datos personales en tiempo real (calorías consumidas, meta, plan nutricional, perfil). 2) Consulta la base de conocimiento de NutriScan (RAG) para responder preguntas generales de nutrición, recetas, estrategias y consejos. Puedes escribir cualquier pregunta libremente o usar las sugerencias rápidas de la pantalla para consultas frecuentes.
+
+P: ¿Puedo ver mis registros de días anteriores?
+R: Sí. En el Paso 1, en la sección de Registro de Comidas, encontrarás una barra de fechas que muestra los días con historial de alimentos. Haz clic en cualquier fecha para ver exactamente qué comiste ese día y cuántas calorías consumiste. El círculo de progreso calórico también se actualiza para mostrar el avance de esa fecha específica. Para registrar nuevos alimentos solo puedes hacerlo en el día actual (Hoy).
+
+P: ¿El nutricionista puede ver lo que registro?
+R: Sí. Los nutricionistas asignados en NutriScan tienen acceso al historial de registros de sus pacientes y pueden revisar tu consumo calórico, los alimentos registrados y tu progreso hacia las metas. También pueden asignarte planes nutricionales personalizados, enviarte mensajes con recomendaciones y ajustar tus metas calóricas. La comunicación entre paciente y nutricionista es parte central del sistema para garantizar un seguimiento personalizado y efectivo.
+
+═══════════════════════════════════════════════════════════════
+SECCIÓN 8: CONDICIONES ESPECIALES Y SALUD
+═══════════════════════════════════════════════════════════════
+
+P: Tengo diabetes. ¿NutriScan me puede ayudar?
+R: NutriScan puede ser una herramienta muy útil para personas con diabetes al permitir monitorear el contenido calórico y de carbohidratos de cada comida. Sin embargo, el manejo de la diabetes requiere supervisión médica especializada. La app debe usarse como complemento al seguimiento con tu médico y nutricionista clínico, no como reemplazo. Si tu nutricionista está registrado en NutriScan, puede asignarte un plan adaptado a tu condición. Siempre consulta con tu médico antes de hacer cambios significativos en tu alimentación si tienes diabetes.
+
+P: Tengo presión arterial alta. ¿Debo reducir la sal?
+R: La reducción de sodio es una de las recomendaciones principales para el control de la hipertensión arterial. La OMS recomienda menos de 5g de sal al día (2g de sodio). Para reducirla: cocinar con especias, ajo, limón y hierbas en lugar de sal; evitar alimentos procesados, embutidos y enlatados que son muy ricos en sodio; no agregar sal extra en la mesa. Sin embargo, el manejo de la hipertensión involucra más factores (peso, ejercicio, estrés, medicación). Trabaja con tu médico y nutricionista para un plan integral.
+
+P: Estoy embarazada. ¿Puedo usar NutriScan?
+R: Durante el embarazo, las necesidades nutricionales cambian significativamente: se requieren más calorías (300-500 kcal adicionales en el segundo y tercer trimestre), más ácido fólico, hierro, calcio, omega-3 y vitamina D. NutriScan puede ayudarte a llevar un registro de tu alimentación, pero es fundamental que cualquier meta calórica o plan nutricional sea supervisado y ajustado por tu médico obstetra y tu nutricionista especializado en embarazo. No uses las metas generales del sistema sin esta supervisión.
+
+P: Soy vegetariano. ¿Cómo cubro mi proteína con NutriScan?
+R: Para vegetarianos, las principales fuentes de proteína son: legumbres (lentejas, garbanzos, frijoles, soja), tofu y tempeh, huevos y lácteos (si los consumes), quinoa, seitan, nueces y semillas. La clave es combinar fuentes complementarias: arroz + lentejas, maíz + frijoles, etc. NutriScan tiene varios de estos alimentos en su catálogo y tu nutricionista puede asignarte un plan adaptado a una dieta vegetariana o vegana que cumpla con tus requerimientos proteicos completos.
+
+═══════════════════════════════════════════════════════════════
+SECCIÓN 9: MOTIVACIÓN, HÁBITOS Y PSICOLOGÍA ALIMENTARIA
+═══════════════════════════════════════════════════════════════
+
+P: Empiezo bien la semana pero siempre recaigo el fin de semana. ¿Qué hago?
+R: Las recaídas de fin de semana son extremadamente comunes. Estrategias para manejarlas: 1) Planifica con anticipación: decide qué comerás en eventos sociales antes de llegar. 2) No busques la perfección: una comida libre planificada no daña tu progreso si el resto de la semana fue consistente. 3) Aplica la regla 80/20: si el 80% de tus comidas son saludables, el 20% restante tiene poco impacto. 4) Registra aunque sea aproximado en NutriScan el fin de semana, la conciencia reduce el exceso. 5) El lunes no es para "castigarte" con restricción extrema; retoma tu plan normal.
+
+P: Me siento culpable cuando como algo que no debería. ¿Es normal?
+R: La culpa alimentaria es muy común pero no es saludable. La alimentación no tiene moral: ningún alimento es "malo" o te hace "mala persona". El enfoque de restricción y culpa genera ciclos poco saludables de privación-atracón. Una relación sana con la comida implica: disfrutar todos los alimentos con moderación, sin etiquetas de "prohibido". Si la culpa alimentaria es intensa y frecuente, considera hablar con un profesional de salud mental además de tu nutricionista. NutriScan está diseñado para ayudarte, no para aumentar la culpa.
+
+P: ¿Cómo me mantengo motivado cuando no veo resultados rápidos?
+R: Los cambios en el cuerpo son más lentos de lo que queremos, pero más acumulativos de lo que creemos. Estrategias para mantener la motivación: 1) Mide más allá del peso: energía, calidad del sueño, digestión, rendimiento en el gym. 2) Celebra hábitos, no solo resultados: 30 días registrando en NutriScan es un logro enorme. 3) Usa los reportes semanales y mensuales de NutriScan para ver tendencias, no solo el día a día. 4) Recuerda tu "por qué" original: salud, bienestar, ejemplo para tu familia. 5) Comparte tu progreso con tu nutricionista para ajustar el plan si es necesario.
+
+P: ¿Qué es el comer emocional y cómo lo identifico?
+R: El comer emocional es usar la comida para gestionar emociones (estrés, tristeza, aburrimiento, ansiedad) en lugar de responder al hambre física real. Señales de que estás comiendo emocionalmente: el hambre llegó de repente e intensamente, quieres un alimento específico (generalmente dulce o grasa), sigues comiendo aunque estés lleno, sientes culpa después. El hambre física, en cambio, aparece gradualmente, se puede posponer, y se satisface con cualquier alimento. Identificar este patrón es el primer paso para trabajarlo con apoyo profesional.
+
+═══════════════════════════════════════════════════════════════
+INFORMACIÓN DEL SISTEMA NUTRISCAN
+═══════════════════════════════════════════════════════════════
+
+NutriScan es un sistema de nutrición inteligente que combina:
+- Reconocimiento de alimentos por visión artificial (YOLOv8)
+- Seguimiento calórico y de macronutrientes en tiempo real
+- Plans nutricionales personalizados por nutricionistas certificados
+- Asistente virtual NutriBot con inteligencia artificial (RAG)
+- Reportes descargables en PDF por día, semana y mes
+- Panel de administración para gestión de usuarios y roles
+- Panel del nutricionista para seguimiento de pacientes
+
+El sistema está desarrollado con Angular (frontend), FastAPI (backend), PostgreSQL (base de datos), ChromaDB (vectores para RAG), y modelos de lenguaje de HuggingFace para la inteligencia artificial conversacional.
+
+Para soporte técnico o consultas sobre el sistema, consulta con el administrador de NutriScan.
+Para consultas nutricionales especializadas, consulta directamente con tu nutricionista asignado.

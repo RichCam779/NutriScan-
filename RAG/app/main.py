@@ -212,3 +212,6 @@ async def trigger_ingestion():
             status_code=500,
             detail=f"Error durante la ingesta: {str(e)}"
         )
+
+# Trigger reload comment to refresh ChromaDB connection after re-indexing
+

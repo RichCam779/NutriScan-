@@ -1,21 +1,289 @@
-.chat-scroll {
-  height: 420px;
-  overflow-y: auto;
-  scroll-behavior: smooth;
+/* ═══════════════════════════════════════════════════════════
+   NutriScan – Estilos del Panel de Paciente (Stepper)
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Fondo general ─────────────────────────────────────────── */
+.ns-panel-bg {
+  background: linear-gradient(160deg, #f0faf5 0%, #f8f9fa 60%, #eaf4ff 100%);
 }
 
-.list-group-item {
-  transition: all 0.2s ease;
+/* ── Top Bar ────────────────────────────────────────────────── */
+.ns-topbar {
+  background: linear-gradient(90deg, #0d6e40 0%, #198754 50%, #1a9e64 100%);
+  box-shadow: 0 4px 18px rgba(25, 135, 84, .25);
 }
 
-.list-group-item:hover {
-  background-color: #f8f9fa;
+.ns-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.25);
+  border: 2px solid rgba(255,255,255,.5);
+  color: #fff;
+  font-weight: 800;
+  font-size: .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: .5px;
 }
 
-textarea:focus, input:focus {
-  box-shadow: none !important;
+/* ── Alerta nutricionista ───────────────────────────────────── */
+.ns-nutricionista-alert {
+  background: #fff;
+  border: 1.5px solid #d1e9dc;
+  box-shadow: 0 2px 12px rgba(25, 135, 84, .08);
 }
 
-svg circle {
-  transition: stroke-dasharray 0.8s ease-in-out;
+/* ── STEPPER BAR ────────────────────────────────────────────── */
+.ns-stepper-bar {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,.07);
+  padding: 1rem 1.5rem;
+}
+
+.ns-stepper-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Conector entre pasos */
+.ns-stepper-connector {
+  flex: 1;
+  height: 3px;
+  background: #e9ecef;
+  border-radius: 2px;
+  transition: background .4s ease;
+  margin: 0 8px;
+}
+.ns-connector-done {
+  background: linear-gradient(90deg, #198754, #20c997);
+}
+
+/* Botón de paso */
+.ns-step-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 12px;
+  transition: background .2s;
+  flex-shrink: 0;
+  text-align: left;
+  color: #6c757d;
+}
+.ns-step-btn:hover { background: #f8f9fa; }
+
+.ns-step-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #e9ecef;
+  color: #adb5bd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: background .3s, color .3s, box-shadow .3s;
+  flex-shrink: 0;
+}
+
+/* Paso activo */
+.ns-step-active .ns-step-circle {
+  background: linear-gradient(135deg, #198754, #20c997);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(25, 135, 84, .4);
+}
+.ns-step-active .ns-step-label { color: #198754; }
+
+/* Paso completado */
+.ns-step-done .ns-step-circle {
+  background: #d1e9dc;
+  color: #198754;
+}
+.ns-step-done .ns-step-label { color: #adb5bd; }
+
+.ns-step-label { line-height: 1.3; }
+
+/* ── CARDS GENERALES ────────────────────────────────────────── */
+.ns-steps-container { }
+
+.ns-card-plan { }
+
+.ns-plan-meta {
+  background: linear-gradient(135deg, #f0faf5, #e2f4ec);
+  border: 1px solid #c3e6cb;
+}
+
+/* ── ESCANEO ────────────────────────────────────────────────── */
+.ns-scan-header {
+  background: linear-gradient(135deg, #0d6e40 0%, #198754 100%);
+}
+
+.ns-scan-tipo-btn {
+  background: linear-gradient(135deg, #f0faf5, #e8f7f0);
+  border: 1.5px solid #c3e6cb;
+  color: #155724;
+  transition: all .2s;
+}
+.ns-scan-tipo-btn:hover {
+  background: #198754;
+  color: #fff;
+  border-color: #198754;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(25,135,84,.3);
+}
+
+/* Animación del escáner */
+.ns-scan-animation { }
+
+.ns-scan-ring {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ns-scan-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid #198754;
+  animation: ns-pulse-ring 1.4s ease-out infinite;
+}
+.ns-scan-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  border: 2px solid rgba(25,135,84,.3);
+  animation: ns-pulse-ring 1.4s ease-out .3s infinite;
+}
+
+@keyframes ns-pulse-ring {
+  0%   { transform: scale(.85); opacity: 1; }
+  70%  { transform: scale(1.25); opacity: 0; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+
+.ns-scan-icon {
+  font-size: 2rem;
+  color: #198754;
+  animation: ns-blink 1s ease-in-out infinite;
+}
+@keyframes ns-blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* Resultado del escaneo */
+.ns-scan-result {
+  background: linear-gradient(135deg, #f0faf5, #e8f7f0);
+  border: 1.5px solid #a3d9b5;
+  border-radius: 14px;
+  padding: 1.25rem;
+}
+.ns-scan-result-icon { font-size: 1.5rem; }
+
+/* ── REPORTE ────────────────────────────────────────────────── */
+.ns-reporte-header {
+  background: linear-gradient(135deg, #0d6e40 0%, #198754 60%, #20c997 100%);
+}
+
+/* ── CHAT ───────────────────────────────────────────────────── */
+.ns-chat-card {
+  background: #fff;
+}
+
+.ns-chat-header {
+  background: linear-gradient(135deg, #1a1e24 0%, #2d3748 100%);
+}
+
+.ns-bot-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #198754, #20c997);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ns-chat-messages {
+  background: #f8f9fa;
+}
+
+.ns-user-msg-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #198754, #20c997);
+  color: #fff;
+  font-weight: 800;
+  font-size: .75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ns-bot-msg-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2d3748;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .9rem;
+}
+
+.ns-user-bubble {
+  background: linear-gradient(135deg, #198754, #20c997);
+  color: #fff;
+}
+
+.ns-bot-bubble {
+  background: #fff;
+  color: #212529;
+}
+
+.ns-chat-footer {
+  background: #fff;
+  border-top: 1px solid #e9ecef;
+}
+
+.ns-chat-input {
+  background: #f0faf5;
+  border: 1.5px solid #c3e6cb !important;
+}
+.ns-chat-input:focus {
+  border-color: #198754 !important;
+  box-shadow: 0 0 0 .2rem rgba(25,135,84,.2) !important;
+}
+
+.ns-sugerencia-btn {
+  font-size: .75rem;
+  transition: all .2s;
+}
+.ns-sugerencia-btn:hover {
+  background: #198754;
+  color: #fff;
+}
+
+/* ── Animación de entrada ───────────────────────────────────── */
+.animate-fade-in {
+  animation: fadeInUp .3s ease-out both;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

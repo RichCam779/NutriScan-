@@ -50,7 +50,7 @@ export class LoginPageComponent implements OnInit {
     setTimeout(() => {
       // Login simulado
       let roleId = 3; // Por defecto paciente
-      let nombre = 'Usuario Genérico';
+      let nombre = 'Juan Pérez';
 
       if (email === 'camilo@nutriscan.pro' || email.includes('admin')) {
         roleId = 1;
@@ -74,8 +74,8 @@ export class LoginPageComponent implements OnInit {
   }
 
   loginComo(roleId: number): void {
-    let nombre = 'Usuario Genérico';
-    let email = 'paciente@nutriscan.pro';
+    let nombre = 'Juan Pérez';
+    let email = 'juan.perez@email.com';
 
     if (roleId === 1) {
       nombre = 'Camilo Hernández';

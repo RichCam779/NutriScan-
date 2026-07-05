@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '../../../../core/services/auth.service';
 import { UsuariosService, Usuario } from '../../services/usuarios.service';
+import { ReportePdfService } from '../../../../core/services/reporte-pdf.service';
 
 interface LogEntry { h: string; msg: string; tipo: string; }
 
@@ -31,11 +32,14 @@ export class AdminPageComponent implements OnInit {
     { h: '13:40', msg: 'Respaldo de base de datos completado', tipo: 'info' }
   ];
 
+  exportandoPdf = false;
+
   constructor(
     private authService: AuthService,
     private usuariosService: UsuariosService,
     private router: Router,
-    private titleService: Title
+    private titleService: Title,
+    private reportePdf: ReportePdfService
   ) { }
 
   ngOnInit(): void {
@@ -149,6 +153,16 @@ export class AdminPageComponent implements OnInit {
     const nuevoEstado = user.estado === 'Activo' ? 'Inactivo' : 'Activo';
     this.addLog(`Estado de ${user.nombre} cambiado a ${nuevoEstado}`, 'info');
     this.sincronizarUsuarios();
+  }
+
+  exportarReporteGeneral(): void {
+    this.exportandoPdf = true;
+    this.addLog('Exportando reporte general de usuarios en PDF...', 'info');
+    setTimeout(() => {
+      this.reportePdf.exportarReporteGeneralAdmin(this.usuarios);
+      this.addLog('Reporte PDF generado y descargado correctamente.', 'success');
+      this.exportandoPdf = false;
+    }, 200);
   }
 
   private addLog(msg: string, tipo: string): void {
