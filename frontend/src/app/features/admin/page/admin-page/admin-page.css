@@ -1,0 +1,17 @@
+.admin-container {
+  min-height: 100vh;
+}
+
+.table-responsive {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.modal {
+  display: block;
+}
+
+.border-success { border-color: #198754 !important; }
+.border-info { border-color: #0dcaf0 !important; }
+.border-danger { border-color: #dc3545 !important; }
+.border-warning { border-color: #ffc107 !important; }

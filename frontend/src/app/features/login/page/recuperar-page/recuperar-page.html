@@ -1,0 +1,75 @@
+<div class="d-flex align-items-center justify-content-center py-5 animate-fade-in"
+     style="min-height: calc(100vh - 200px);">
+  <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="max-width: 900px; width: 100%;">
+    <div class="row g-0">
+      <!-- Panel lateral verde -->
+      <div class="col-md-5 bg-success d-none d-md-flex align-items-center justify-content-center p-5 text-white login-sidebar"
+           style="background: linear-gradient(135deg, #198754, #146c43) !important;">
+        <div class="text-center z-1 position-relative">
+          <div class="d-inline-flex align-items-center justify-content-center
+                       rounded-circle mb-4 border border-white border-2 shadow"
+               style="width:80px;height:80px;background:rgba(255,255,255,0.2);">
+            <i class="bi bi-key-fill fs-1 text-white"></i>
+          </div>
+          <h2 class="fw-bold mb-3">Seguridad</h2>
+          <p class="lead">
+            Recupera el acceso a tu cuenta de NutriScan rápida y de manera segura.
+          </p>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <div class="col-md-7 p-sm-5 p-4 bg-white">
+        <div class="text-center mb-4 d-md-none">
+          <i class="bi bi-key-fill text-success" style="font-size:3rem;"></i>
+        </div>
+        <h3 class="fw-bold mb-1 text-center text-md-start">¿Olvidaste tu contraseña?</h3>
+        <p class="text-muted mb-4 text-center text-md-start">
+          Ingresa tu dirección de correo electrónico y te enviaremos las instrucciones para restablecer tu contraseña.
+        </p>
+
+        <!-- Mensaje de éxito -->
+        <div *ngIf="success" class="alert alert-success mb-4 p-4 rounded-3 animate-fade-in" role="alert">
+          <h6 class="fw-bold mb-2"><i class="bi bi-check-circle-fill me-2"></i>¡Correo Enviado!</h6>
+          <p class="mb-0 small">
+            Hemos enviado un enlace de recuperación a <strong>{{ recuperarForm.get('email')?.value }}</strong>. Por favor revisa tu bandeja de entrada y tu carpeta de correo no deseado (spam).
+          </p>
+        </div>
+
+        <form *ngIf="!success" [formGroup]="recuperarForm" (ngSubmit)="handleRecuperar()">
+          <div class="form-floating mb-4">
+            <input formControlName="email" type="email"
+                   class="form-control rounded-3"
+                   [class.is-invalid]="recuperarForm.get('email')?.invalid && recuperarForm.get('email')?.touched"
+                   id="floatingEmail" placeholder="nombre&#64;ejemplo.com">
+            <label for="floatingEmail">Correo Electrónico</label>
+            <div class="invalid-feedback" *ngIf="recuperarForm.get('email')?.errors?.['required']">
+              El correo es requerido.
+            </div>
+            <div class="invalid-feedback" *ngIf="recuperarForm.get('email')?.errors?.['email']">
+              Ingresa un correo válido.
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="loading || recuperarForm.invalid"
+                  class="btn btn-success w-100 py-3 rounded-3 fw-bold mb-4 shadow-sm btn-submit">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            {{ loading ? 'Enviando...' : 'Enviar enlace de recuperación' }}
+          </button>
+
+          <div class="text-center">
+            <a routerLink="/login" class="text-success text-decoration-none fw-bold">
+              <i class="bi bi-arrow-left me-2"></i>Volver al inicio de sesión
+            </a>
+          </div>
+        </form>
+
+        <div *ngIf="success" class="text-center">
+          <a routerLink="/login" class="btn btn-outline-success rounded-pill px-4 fw-bold shadow-sm">
+            Ir al inicio de sesión
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

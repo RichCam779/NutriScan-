@@ -1,0 +1,7 @@
+NUTRISCAN - ESPECIFICACIONES DEL DATASET DE ENTRENAMIENTO IA
+
+MÉTRICAS DEL MODELO YOLOv8
+- Dataset de entrenamiento compuesto por 4.500 imágenes etiquetadas manualmente.
+- Distribución de datos: 70% para entrenamiento (train), 20% para validación (val) y 10% para pruebas (test).
+- La precisión media obtenida (mAP50-95) es del 82.4% en condiciones de iluminación óptimas de comedor.
+- El tiempo promedio de inferencia por cada fotograma procesado en una CPU local estándar es de 180 milisegundos.

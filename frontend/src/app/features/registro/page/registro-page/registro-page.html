@@ -1,0 +1,214 @@
+<div class="container py-5 animate-fade-in">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8">
+      <div class="card border-0 shadow-lg mt-3 rounded-4 overflow-hidden">
+        <!-- Cabecera -->
+        <div class="bg-success text-white p-4 text-center">
+          <div class="d-inline-flex align-items-center justify-content-center
+                      rounded-circle mb-2 border border-white border-2 shadow"
+               style="width:70px;height:70px;background:rgba(255,255,255,0.2);">
+            <i class="bi bi-heart-pulse-fill fs-2"></i>
+          </div>
+          <h2 class="fw-bold mt-2 mb-0">Crea tu cuenta</h2>
+          <p class="text-white-50 mb-0 mt-1">
+            Sincroniza tu salud con nuestra ingeniería nutricional
+          </p>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+          <!-- Mensaje de error/éxito -->
+          <div *ngIf="errorMessage" class="alert alert-danger mb-4 py-2 small" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+          </div>
+
+          <form [formGroup]="registroForm" (ngSubmit)="handleRegistro()">
+            <div class="row g-4">
+              <!-- Datos de Identidad -->
+              <div class="col-md-6">
+                <label for="identificacion" class="form-label fw-semibold text-secondary">Identificación</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0">
+                    <i class="bi bi-card-heading text-muted"></i>
+                  </span>
+                  <input type="text" class="form-control border-start-0 ps-0" id="identificacion"
+                         formControlName="identificacion" placeholder="C.C. / Pasaporte"
+                         [class.is-invalid]="registroForm.get('identificacion')?.invalid && registroForm.get('identificacion')?.touched">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="nombreCompleto" class="form-label fw-semibold text-secondary">Nombre Completo</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0">
+                    <i class="bi bi-person text-muted"></i>
+                  </span>
+                  <input type="text" class="form-control border-start-0 ps-0" id="nombreCompleto"
+                         formControlName="nombreCompleto" placeholder="Nombre y Apellidos"
+                         [class.is-invalid]="registroForm.get('nombreCompleto')?.invalid && registroForm.get('nombreCompleto')?.touched">
+                </div>
+              </div>
+
+              <!-- Contacto y Perfil -->
+              <div class="col-md-6">
+                <label for="email" class="form-label fw-semibold text-secondary">Correo Electrónico</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0">
+                    <i class="bi bi-envelope text-muted"></i>
+                  </span>
+                  <input type="email" class="form-control border-start-0 ps-0" id="email"
+                         formControlName="email" placeholder="tucorreo@ejemplo.com"
+                         [class.is-invalid]="registroForm.get('email')?.invalid && registroForm.get('email')?.touched">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="genero" class="form-label fw-semibold text-secondary">Género</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0">
+                    <i class="bi bi-gender-ambiguous text-muted"></i>
+                  </span>
+                  <select class="form-select border-start-0 ps-0" id="genero"
+                          formControlName="genero"
+                          [class.is-invalid]="registroForm.get('genero')?.invalid && registroForm.get('genero')?.touched">
+                    <option value="" disabled selected>Selecciona tu género</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Otro">Otro</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Ubicación -->
+              <div class="col-md-4">
+                <label for="pais" class="form-label fw-semibold text-secondary">País</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0">
+                    <i class="bi bi-geo-alt text-muted"></i>
+                  </span>
+                  <select class="form-select border-start-0 ps-0" id="pais"
+                          formControlName="pais" (change)="onPaisChange()"
+                          [class.is-invalid]="registroForm.get('pais')?.invalid && registroForm.get('pais')?.touched">
+                    <option value="" disabled selected>Selecciona País</option>
+                    <option *ngFor="let p of paisesDisponibles" [value]="p">{{ p }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="departamento" class="form-label fw-semibold text-secondary">Departamento</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0">
+                    <i class="bi bi-map text-muted"></i>
+                  </span>
+                  <select class="form-select border-start-0 ps-0" id="departamento"
+                          formControlName="departamento" (change)="onDepartamentoChange()"
+                          [class.is-invalid]="registroForm.get('departamento')?.invalid && registroForm.get('departamento')?.touched"
+                          [disabled]="!registroForm.get('pais')?.value">
+                    <option value="" disabled selected>Selecciona Depto</option>
+                    <option *ngFor="let d of departamentosDisponibles" [value]="d">{{ d }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="ciudad" class="form-label fw-semibold text-secondary">Ciudad</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0">
+                    <i class="bi bi-building text-muted"></i>
+                  </span>
+                  <select class="form-select border-start-0 ps-0" id="ciudad"
+                          formControlName="ciudad"
+                          [class.is-invalid]="registroForm.get('ciudad')?.invalid && registroForm.get('ciudad')?.touched"
+                          [disabled]="!registroForm.get('departamento')?.value">
+                    <option value="" disabled selected>Selecciona Ciudad</option>
+                    <option *ngFor="let c of ciudadesDisponibles" [value]="c">{{ c }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Seguridad -->
+              <div class="col-md-6">
+                <label for="password" class="form-label fw-semibold text-secondary">Contraseña</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0">
+                    <i class="bi bi-lock text-muted"></i>
+                  </span>
+                  <input type="password" class="form-control border-start-0 ps-0" id="password"
+                         formControlName="password" placeholder="Mínimo 6 caracteres"
+                         [class.is-invalid]="registroForm.get('password')?.invalid && registroForm.get('password')?.touched">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="confirmPassword" class="form-label fw-semibold text-secondary">Confirmar Contraseña</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0">
+                    <i class="bi bi-shield-lock text-muted"></i>
+                  </span>
+                  <input type="password" class="form-control border-start-0 ps-0" id="confirmPassword"
+                         formControlName="confirmPassword"
+                         [class.is-invalid]="registroForm.get('confirmPassword')?.invalid && registroForm.get('confirmPassword')?.touched">
+                </div>
+              </div>
+
+              <!-- Subida de Foto (YOLO Scanning) -->
+              <div class="col-12 mt-4">
+                <label for="fotoPerfil" class="form-label fw-bold text-success">
+                  <i class="bi bi-camera me-2"></i>Foto para Análisis NutriScan (YOLO Scanning)
+                </label>
+                <div class="card border-dashed p-4 text-center bg-light rounded-4 border-2 yolo-uploader-card">
+                  <input type="file" id="fotoPerfil" class="d-none" accept="image/*" (change)="onFileSelected($event)">
+                  <label for="fotoPerfil" class="mb-0 cursor-pointer" style="cursor: pointer;">
+                    <i [class]="'bi bi-cloud-arrow-up display-5 text-' + (fotoArchivo ? 'primary' : 'success')"></i>
+                    <p class="mb-1 fw-bold mt-2">
+                      {{ fotoArchivo ? fotoArchivoName : 'Sube tu foto aquí' }}
+                    </p>
+                    <p class="text-muted small mb-0">
+                      La IA analizará tu biotipo mediante visión por computadora (YOLOv8).
+                    </p>
+                  </label>
+
+                  <!-- Escáner animado que aparece al analizar -->
+                  <div *ngIf="analizandoIA" class="yolo-scanner-overlay d-flex align-items-center justify-content-center">
+                    <div class="text-white text-center">
+                      <div class="scanner-line"></div>
+                      <div class="spinner-border text-success mb-2" style="width: 3rem; height: 3rem;" role="status"></div>
+                      <p class="fw-bold mb-0">YOLOv8 Vision AI Analizando Biotipo...</p>
+                      <small class="text-white-50">Determinando composición corporal y estructura ósea</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center mt-2">
+                  <small class="text-danger fw-semibold">* Este campo es obligatorio para el análisis de salud inicial.</small>
+                </div>
+              </div>
+
+              <div class="col-12 mt-4 pt-2">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="terminos" formControlName="terminos">
+                  <label class="form-check-label text-muted small" for="terminos">
+                    Acepto los <a routerLink="/registro" class="text-success text-decoration-none fw-semibold">Términos de servicio</a> y la
+                    <a routerLink="/registro" class="text-success text-decoration-none fw-semibold">Política de privacidad</a>.
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-12 mt-4">
+                <button type="submit" [disabled]="analizandoIA || registroForm.invalid || !fotoArchivo"
+                        class="btn btn-success w-100 py-3 fw-bold rounded-3 shadow-sm btn-register">
+                  {{ analizandoIA ? 'Analizando Biotipo con IA...' : 'Finalizar Registro y Crear Cuenta' }}
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <div class="text-center mt-4">
+            <p class="text-muted mb-0">
+              ¿Ya tienes una cuenta? <a routerLink="/login" class="text-success fw-bold text-decoration-none">Inicia sesión</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

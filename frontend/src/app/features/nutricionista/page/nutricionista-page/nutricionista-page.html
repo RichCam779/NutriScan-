@@ -1,0 +1,278 @@
+<div class="container-fluid bg-light py-4 min-vh-100 animate-fade-in">
+  <div class="container">
+    <!-- Cabecera -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+      <div>
+        <h2 class="fw-bold mb-0 text-dark">Portal Profesional</h2>
+        <p class="text-muted">Supervisión de interacciones IA, planes nutricionales y gestión de pacientes</p>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center bg-dark text-white px-4 py-2 rounded-pill shadow-sm">
+          <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold"
+               style="width:40px;height:40px;">
+            {{ getInitials(auth?.nombre) }}
+          </div>
+          <div>
+            <h6 class="mb-0 fw-bold text-white">{{ auth?.nombre || 'Richard Gómez' }}</h6>
+            <small class="text-success fw-semibold"><i class="bi bi-circle-fill me-1" style="font-size:8px;"></i>En línea</small>
+          </div>
+        </div>
+        <button (click)="logout()" class="btn btn-outline-danger rounded-pill px-3 fw-bold shadow-sm" aria-label="Cerrar Sesión">
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Lista de Pacientes -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+          <div class="card-header bg-dark text-white p-3 border-bottom-0">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-people-fill me-2"></i>Pacientes Activos</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush">
+              <button *ngFor="let p of pacientes" type="button"
+                      [class]="'list-group-item list-group-item-action p-4 border-bottom border-light ' +
+                                (pacienteSeleccionado?.id === p.id ? 'bg-success bg-opacity-10 border-start border-4 border-success' : '')"
+                      (click)="seleccionarPaciente(p)">
+                <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                  <h6 class="mb-0 fw-bold">{{ p.nombre }}</h6>
+                  <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill small">{{ p.biotipo }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                  <small class="text-muted"><i class="bi bi-clock me-1"></i>{{ p.ultimaInteraccion }}</small>
+                  <span [class]="'badge rounded-pill ' + (p.estado === 'Revisar' ? 'bg-warning text-dark' : 'bg-success')">
+                    {{ p.estado }}
+                  </span>
+                </div>
+                <!-- Indicador de plan asignado -->
+                <div *ngIf="pacientesService.obtenerPlanPorPaciente(p.id)" class="mt-2">
+                  <small class="text-success fw-semibold"><i class="bi bi-check-circle-fill me-1"></i>Plan asignado</small>
+                </div>
+              </button>
+              <div *ngIf="pacientes.length === 0" class="p-4 text-center text-muted">
+                <i class="bi bi-person-x display-6 d-block mb-2 opacity-50"></i>
+                No hay pacientes activos registrados.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel Principal -->
+      <div class="col-lg-8">
+        <ng-container *ngIf="pacienteSeleccionado; else sinSeleccion">
+
+          <!-- Alerta de éxito al asignar plan -->
+          <div *ngIf="planGuardadoExito"
+               class="alert alert-success d-flex align-items-center gap-3 rounded-4 shadow-sm mb-3 animate-fade-in">
+            <i class="bi bi-check-circle-fill fs-4 flex-shrink-0"></i>
+            <div>
+              <strong>¡Plan asignado exitosamente!</strong> El paciente <strong>{{ pacienteSeleccionado.nombre }}</strong>
+              ya puede ver su nuevo plan nutricional en su panel.
+            </div>
+          </div>
+
+          <!-- Plan Nutricional del paciente -->
+          <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-header bg-white p-4 border-bottom border-light d-flex justify-content-between align-items-center">
+              <h5 class="fw-bold mb-0">
+                <i class="bi bi-clipboard2-pulse-fill text-success me-2"></i>
+                Plan Nutricional — {{ pacienteSeleccionado.nombre }}
+              </h5>
+              <button class="btn btn-success rounded-pill px-3 fw-semibold btn-sm" (click)="abrirFormPlan()">
+                <i class="bi bi-plus-lg me-1"></i>{{ planExistente ? 'Actualizar Plan' : 'Crear Plan' }}
+              </button>
+            </div>
+            <div class="card-body p-4">
+
+              <!-- Formulario de plan -->
+              <div *ngIf="mostrandoFormPlan" class="animate-fade-in">
+                <div class="row g-3 mb-3">
+                  <div class="col-12">
+                    <label class="form-label fw-semibold small text-muted">Calorías Objetivo / Día</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-success text-white border-0"><i class="bi bi-fire"></i></span>
+                      <input type="number" class="form-control bg-light border-0" [(ngModel)]="nuevoPlan.caloriasObjetivo"
+                             min="1000" max="5000" placeholder="ej: 2200">
+                      <span class="input-group-text bg-light border-0 text-muted">kcal</span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold small text-muted"><i class="bi bi-droplet-fill text-danger me-1"></i>Proteínas</label>
+                    <div class="input-group">
+                      <input type="number" class="form-control bg-light border-0" [(ngModel)]="nuevoPlan.proteinas_g" min="0" max="500">
+                      <span class="input-group-text bg-light border-0 text-muted">g</span>
+                    </div>
+                    <small class="text-muted">{{ nuevoPlan.proteinas_g * 4 }} kcal</small>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold small text-muted"><i class="bi bi-grid-fill text-warning me-1"></i>Carbohidratos</label>
+                    <div class="input-group">
+                      <input type="number" class="form-control bg-light border-0" [(ngModel)]="nuevoPlan.carbohidratos_g" min="0" max="800">
+                      <span class="input-group-text bg-light border-0 text-muted">g</span>
+                    </div>
+                    <small class="text-muted">{{ nuevoPlan.carbohidratos_g * 4 }} kcal</small>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold small text-muted"><i class="bi bi-egg-fill text-info me-1"></i>Grasas</label>
+                    <div class="input-group">
+                      <input type="number" class="form-control bg-light border-0" [(ngModel)]="nuevoPlan.grasas_g" min="0" max="300">
+                      <span class="input-group-text bg-light border-0 text-muted">g</span>
+                    </div>
+                    <small class="text-muted">{{ nuevoPlan.grasas_g * 9 }} kcal</small>
+                  </div>
+                  <div class="col-12">
+                    <small class="text-muted">Total macros: <strong>{{ getTotalMacros() }} kcal</strong></small>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label fw-semibold small text-muted">Recomendaciones y Observaciones</label>
+                    <textarea class="form-control bg-light border-0" rows="3"
+                              placeholder="Ej: Consumir proteínas dentro de los 30 min post-ejercicio. Evitar azúcares simples en la noche..."
+                              [(ngModel)]="nuevoPlan.recomendaciones"></textarea>
+                  </div>
+                </div>
+                <div class="d-flex gap-2 justify-content-end">
+                  <button class="btn btn-outline-secondary rounded-pill px-3" (click)="cancelarFormPlan()">Cancelar</button>
+                  <button class="btn btn-success rounded-pill px-4 fw-bold" (click)="asignarPlan()">
+                    <i class="bi bi-send-check me-2"></i>Asignar Plan
+                  </button>
+                </div>
+              </div>
+
+              <!-- Vista del plan existente -->
+              <div *ngIf="!mostrandoFormPlan && planExistente" class="animate-fade-in">
+                <div class="row g-3 mb-3">
+                  <div class="col-12">
+                    <div class="bg-success bg-opacity-10 rounded-3 p-3 d-flex justify-content-between align-items-center">
+                      <div>
+                        <div class="fw-bold text-success fs-5">{{ planExistente.caloriasObjetivo }} kcal / día</div>
+                        <small class="text-muted">Asignado el {{ planExistente.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</small>
+                      </div>
+                      <i class="bi bi-fire text-success fs-2"></i>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="text-center p-3 bg-danger bg-opacity-10 rounded-3">
+                      <div class="fw-bold text-danger fs-5">{{ planExistente.proteinas_g }}g</div>
+                      <small class="text-muted">Proteínas</small>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="text-center p-3 bg-warning bg-opacity-10 rounded-3">
+                      <div class="fw-bold text-warning fs-5">{{ planExistente.carbohidratos_g }}g</div>
+                      <small class="text-muted">Carbohidratos</small>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="text-center p-3 bg-info bg-opacity-10 rounded-3">
+                      <div class="fw-bold text-info fs-5">{{ planExistente.grasas_g }}g</div>
+                      <small class="text-muted">Grasas</small>
+                    </div>
+                  </div>
+                  <div *ngIf="planExistente.recomendaciones" class="col-12">
+                    <div class="bg-light p-3 rounded-3 border-start border-3 border-success">
+                      <small class="text-muted fw-semibold d-block mb-1"><i class="bi bi-journal-text me-1"></i>Observaciones</small>
+                      <p class="mb-0 small">{{ planExistente.recomendaciones }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sin plan -->
+              <div *ngIf="!mostrandoFormPlan && !planExistente" class="text-center py-4 text-muted opacity-50">
+                <i class="bi bi-clipboard2 display-4 d-block mb-2"></i>
+                <p class="fw-semibold">Sin plan asignado</p>
+                <small>Crea un plan nutricional personalizado para este paciente.</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Historial de chat -->
+          <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-header bg-white p-4 border-bottom border-light">
+              <h5 class="fw-bold mb-1">
+                <i class="bi bi-chat-dots-fill text-success me-2"></i>
+                Conversación: {{ pacienteSeleccionado.nombre }} y NutriBot
+              </h5>
+              <p class="text-muted small mb-0">
+                Último chat: {{ pacienteSeleccionado.ultimaInteraccion }}
+                &nbsp;·&nbsp;
+                <span class="badge bg-info bg-opacity-10 text-info">{{ pacienteSeleccionado.biotipo }}</span>
+              </p>
+            </div>
+            <div class="card-body bg-light p-4" style="max-height:320px;overflow-y:auto;">
+              <div *ngIf="cargandoChat" class="text-center py-5 text-muted">
+                <div class="spinner-border spinner-border-sm me-2" role="status"></div>Cargando historial...
+              </div>
+              <div *ngIf="!cargandoChat && historialChat.length === 0"
+                   class="text-center py-5 text-muted opacity-50">
+                <i class="bi bi-chat-square display-4 d-block mb-3"></i>
+                <p class="fw-semibold">Sin conversaciones registradas</p>
+              </div>
+              <div *ngFor="let m of historialChat" class="animate-fade-in">
+                <div class="d-flex mb-3">
+                  <div class="flex-shrink-0 me-3">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                          style="width:35px;height:35px;font-size:12px;">
+                      {{ getInitials(pacienteSeleccionado.nombre) }}
+                    </div>
+                  </div>
+                  <div style="max-width:75%;">
+                    <div class="bg-white p-3 rounded-4 shadow-sm text-dark border">{{ m.pregunta_usuario }}</div>
+                    <small class="text-muted ms-1">{{ m.fecha_creacion | date:'shortTime' }}</small>
+                  </div>
+                </div>
+                <div class="d-flex mb-4 flex-row-reverse">
+                  <div class="flex-shrink-0 ms-3">
+                    <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center"
+                         style="width:35px;height:35px;"><i class="bi bi-robot"></i></div>
+                  </div>
+                  <div class="text-end" style="max-width:75%;">
+                    <div class="bg-white p-3 rounded-4 shadow-sm text-dark d-inline-block text-start border">{{ m.respuesta_ia }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Enviar mensaje motivacional -->
+          <div class="card border-0 shadow-sm rounded-4 border-start border-4 border-success">
+            <div class="card-body p-4">
+              <h5 class="fw-bold mb-3">
+                <i class="bi bi-chat-heart-fill text-success me-2"></i>Enviar Mensaje al Paciente
+              </h5>
+              <p class="text-muted small mb-3">
+                Este mensaje aparecerá destacado en el panel principal del usuario.
+              </p>
+              <form (ngSubmit)="enviarMensaje()">
+                <div class="mb-3">
+                  <textarea class="form-control bg-light border-0" rows="3"
+                            placeholder="Escribe un mensaje de apoyo, recomendación o ajuste a su dieta..."
+                            [(ngModel)]="mensajeMotivacional" name="mensaje" required></textarea>
+                </div>
+                <div class="text-end">
+                  <button type="submit" class="btn btn-success px-4 rounded-pill fw-semibold shadow-sm">
+                    <i class="bi bi-send me-2"></i>Enviar Mensaje
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Sin paciente seleccionado -->
+        <ng-template #sinSeleccion>
+          <div class="card border-0 shadow-sm rounded-4 h-100 d-flex align-items-center justify-content-center text-center p-5 bg-white">
+            <div class="text-muted opacity-50 mb-3"><i class="bi bi-inboxes display-1"></i></div>
+            <h4 class="fw-bold text-secondary">Selecciona un paciente</h4>
+            <p class="text-muted mx-auto" style="max-width:400px;">
+              Haz clic en un paciente de la lista para revisar sus interacciones con la IA, crear planes nutricionales e impartir recomendaciones.
+            </p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

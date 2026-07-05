@@ -1,0 +1,21 @@
+.chat-scroll {
+  height: 420px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.list-group-item {
+  transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+textarea:focus, input:focus {
+  box-shadow: none !important;
+}
+
+svg circle {
+  transition: stroke-dasharray 0.8s ease-in-out;
+}

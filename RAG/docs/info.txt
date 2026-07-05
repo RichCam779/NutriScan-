@@ -1,0 +1,11 @@
+PROTOTIPO NUTRISCAN - NOTAS DE DESARROLLO Y LIMITACIONES DEL SPRINT
+
+REGLAS DE CONECTIVIDAD DE LA API
+- El backend de FastAPI expone sus endpoints bajo la ruta base de desarrollo: http://localhost:8000/api/v1
+- Toda petición desde el frontend de Angular debe incluir en las cabeceras el token de autenticación JWT obtenido durante el inicio de sesión.
+- El tiempo de respuesta máximo configurado para la inferencia de imágenes con YOLOv8 es de 2.5 segundos antes de lanzar una excepción de timeout.
+
+LIMITACIONES ACTUALES DEL PROTOTIPO
+- El modelo de IA actual solo tiene capacidad para identificar un catálogo inicial de 15 alimentos básicos (incluyendo frutas, verduras y carnes comunes).
+- No se realiza análisis volumétrico por imagen en este sprint; el cálculo nutricional se basa estrictamente en porciones de tamaño estándar predefinidas en la base de datos PostgreSQL.
+- La migración del frontend desde el framework anterior a Angular se completó con éxito, asegurando un ciclo de vida de componentes óptimo para la actualización de gráficos en tiempo real.

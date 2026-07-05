@@ -1,0 +1,18 @@
+/* Estilos específicos de la página principal */
+.hero-section {
+  position: relative;
+  background: linear-gradient(135deg, var(--ns-dark) 0%, var(--ns-dark2) 100%);
+}
+
+.feature-card {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.08) !important;
+}
+
+.logo-pulse {
+  animation: pulse 3.5s infinite ease-in-out;
+}

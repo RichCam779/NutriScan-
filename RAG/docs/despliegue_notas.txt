@@ -1,0 +1,7 @@
+NUTRISCAN - CONFIGURACIÓN DEL ENTORNO DE DESPLIEGUE LOCAL
+
+REQUISITOS DEL SISTEMA DE BASE DE DATOS
+- Motor de base de datos: PostgreSQL versión 15 o superior.
+- Nombre de la base de datos por defecto: nutriscan_db
+- El puerto por defecto para la conexión del pool de SQLAlchemy es el 5432.
+- Las migraciones de esquemas y tablas de alimentos se gestionan de manera automatizada mediante la librería Alembic en el entorno virtual.

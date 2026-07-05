@@ -1,0 +1,17 @@
+PROTOTIPO NUTRISCAN - GUÍA DE RECOMENDACIONES PARA CONTROL DE PESO
+MÓDULO DE ASESORÍA NUTRICIONAL - BASE DE CONOCIMIENTO PARA EL USUARIO
+
+1. ALIMENTOS RECOMENDADOS PARA BAJAR DE PESO (DÉFICIT CALÓRICO)
+Para perder peso de forma saludable, el sistema prioriza alimentos que aporten un alto volumen de comida y fibra pero pocas calorías, ayudando a controlar la ansiedad y el hambre:
+- Manzanas y Fresas: Son frutas excelentes por su alto contenido de agua y fibra soluble. Ayudan a mantener la sensación de saciedad por mucho más tiempo entre comidas.
+- Espinacas, Acelgas y Brócoli: Verduras de hoja verde con un aporte calórico casi nulo. Permiten llenar el plato de forma abundante sin exceder los límites energéticos del día.
+- Pechuga de Pollo, Pavo y Huevo: Fuentes de proteína magra de alta calidad. Son fundamentales para proteger la masa muscular mientras se pierde grasa, y exigen más energía al cuerpo para ser digeridas (efecto térmico de los alimentos).
+
+2. ALIMENTOS RECOMENDADOS PARA SUBIR DE PESO (SUPERÁVIT CALÓRICO SALUDABLE)
+Para personas que buscan ganar peso o aumentar su masa muscular, se sugieren alimentos con una alta densidad nutricional y grasas saludables, evitando saturar el estómago con porciones gigantescas:
+- Aguacate: Una fuente extraordinaria de calorías limpias y grasas monoinsaturadas beneficiosas para el organismo. Es ideal para enriquecer ensaladas o acompañar comidas.
+- Carne de Res Magra y Salmón: Proteínas densas que aportan grasas saludables (como el Omega-3 en el salmón) y los aminoácidos necesarios para la recuperación y el desarrollo muscular.
+- Arroz, Avena y Pasta Integral: Carbohidratos complejos de absorción limpia. Proporcionan la energía sostenida que se requiere para los entrenamientos y ayudan a reponer los depósitos de glucógeno del cuerpo.
+
+3. REGLA DE ORO DEL BALANCE ENERGÉTICO
+Ningún alimento por sí solo tiene la capacidad de subir o bajar de peso a una persona. El factor determinante es el balance calórico total al final del día. El sistema calcula y suma los macronutrientes de las porciones consumidas para asegurar que el usuario se mantenga alineado con su meta personalizada, priorizando siempre la calidad de los nutrientes.

@@ -1,0 +1,18 @@
+.contacto-container {
+  min-height: calc(100vh - 80px);
+}
+
+.icon-circle {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card:hover .icon-circle {
+  background-color: var(--ns-green) !important;
+  color: #fff !important;
+}
+
+textarea:focus {
+  box-shadow: none;
+  border: 1px solid var(--ns-green) !important;
+  background-color: #fff !important;
+}

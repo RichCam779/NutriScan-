@@ -1,0 +1,92 @@
+<div class="d-flex align-items-center justify-content-center py-5 animate-fade-in"
+     style="min-height: calc(100vh - 200px);">
+  <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="max-width: 900px; width: 100%;">
+    <div class="row g-0">
+      <!-- Panel lateral verde -->
+      <div class="col-md-5 bg-success d-none d-md-flex align-items-center justify-content-center p-5 text-white login-sidebar">
+        <div class="text-center z-1 position-relative">
+          <div class="d-inline-flex align-items-center justify-content-center
+                       rounded-circle mb-4 border border-white border-2 shadow"
+               style="width:80px;height:80px;background:rgba(255,255,255,0.2);">
+            <i class="bi bi-heart-pulse-fill fs-1"></i>
+          </div>
+          <h2 class="fw-bold mb-3">¡Bienvenido!</h2>
+          <p class="lead">
+            Accede a tu cuenta de NutriScan y continúa tu camino
+            hacia una vida más saludable.
+          </p>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <div class="col-md-7 p-sm-5 p-4 bg-white">
+        <div class="text-center mb-4 d-md-none">
+          <i class="bi bi-heart-pulse-fill text-success" style="font-size:3rem;"></i>
+        </div>
+        <h3 class="fw-bold mb-1 text-center text-md-start">Iniciar Sesión</h3>
+        <p class="text-muted mb-4 text-center text-md-start">Accede a tu panel de control de NutriScan Pro.</p>
+
+        <div *ngIf="error" class="alert alert-danger mb-4 py-2 small" role="alert">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="handleLogin()">
+          <div class="form-floating mb-3">
+            <input formControlName="email" type="email"
+                   class="form-control rounded-3"
+                   [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+                   id="floatingInput" placeholder="nombre&#64;ejemplo.com">
+            <label for="floatingInput">Correo Electrónico</label>
+            <div class="invalid-feedback" *ngIf="loginForm.get('email')?.errors?.['required']">
+              El correo es requerido.
+            </div>
+            <div class="invalid-feedback" *ngIf="loginForm.get('email')?.errors?.['email']">
+              Ingresa un correo válido.
+            </div>
+          </div>
+
+          <div class="form-floating mb-4 position-relative">
+            <input formControlName="password"
+                   [type]="showPassword ? 'text' : 'password'"
+                   class="form-control rounded-3"
+                   [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                   id="floatingPassword" placeholder="Contraseña">
+            <label for="floatingPassword">Contraseña</label>
+            <button type="button"
+                    class="btn position-absolute top-50 end-0 translate-middle-y border-0 me-2"
+                    (click)="showPassword = !showPassword"
+                    [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Ver contraseña'">
+              <i [class]="'bi bi-eye' + (showPassword ? '-slash' : '') + ' text-muted'"></i>
+            </button>
+            <div class="invalid-feedback">
+              La contraseña es requerida.
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="rememberMe">
+              <label class="form-check-label text-muted" for="rememberMe">Recordarme</label>
+            </div>
+            <a routerLink="/recuperar" class="text-success text-decoration-none fw-semibold">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+
+          <button type="submit" [disabled]="loading || loginForm.invalid"
+                  class="btn btn-success w-100 py-3 rounded-3 fw-bold mb-4 shadow-sm btn-login">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            {{ loading ? 'Entrando...' : 'Ingresar a mi cuenta' }}
+          </button>
+
+
+
+          <div class="text-center text-muted">
+            ¿No tienes una cuenta?
+            <a routerLink="/registro" class="text-success text-decoration-none fw-bold">Regístrate aquí</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

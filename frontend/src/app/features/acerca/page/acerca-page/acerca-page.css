@@ -1,0 +1,15 @@
+.acerca-container {
+  min-height: calc(100vh - 80px);
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.feature-icon-circle {
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.card:hover .feature-icon-circle {
+  transform: scale(1.1);
+}

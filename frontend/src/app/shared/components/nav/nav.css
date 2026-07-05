@@ -1,0 +1,17 @@
+/* Navigation styles */
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(25, 135, 84, 0.2) !important;
+}
+
+.dropdown-item {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(25, 135, 84, 0.1);
+  color: #198754;
+}

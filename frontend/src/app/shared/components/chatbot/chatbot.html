@@ -1,0 +1,65 @@
+<!-- Botón flotante -->
+<button class="chatbot-toggle-btn shadow-lg" (click)="toggleChat()" [class.active]="isOpen" aria-label="Abrir Asistente RAG">
+  <i class="bi" [class.bi-robot]="!isOpen" [class.bi-x-lg]="isOpen"></i>
+  <span class="pulse-ring" *ngIf="!isOpen"></span>
+</button>
+
+<!-- Ventana de Chat -->
+<div class="chatbot-window shadow-lg d-flex flex-column" [class.open]="isOpen">
+  <!-- Cabecera -->
+  <div class="chat-header d-flex align-items-center justify-content-between p-3 text-white">
+    <div class="d-flex align-items-center gap-2">
+      <div class="chat-header-avatar">
+        <i class="bi bi-robot"></i>
+      </div>
+      <div>
+        <h6 class="mb-0 fw-bold">Asistente NutriScan</h6>
+        <small class="text-white-50"><span class="status-indicator"></span>En línea</small>
+      </div>
+    </div>
+    <button class="btn btn-sm btn-link text-white p-0 border-0" (click)="toggleChat()" aria-label="Minimizar chat">
+      <i class="bi bi-dash-lg fs-5"></i>
+    </button>
+  </div>
+
+  <!-- Cuerpo del chat (Mensajes) -->
+  <div class="chat-body flex-grow-1 p-3" #chatBody>
+    <div *ngFor="let msg of messages" class="chat-message-wrapper mb-3" [class.user-msg]="msg.sender === 'user'">
+      <div class="chat-avatar" *ngIf="msg.sender === 'bot'">
+        <i class="bi bi-heart-pulse-fill"></i>
+      </div>
+      <div class="chat-bubble shadow-sm">
+        <div class="message-content">{{ msg.text }}</div>
+
+        <span class="message-time">{{ msg.time | date:'shortTime' }}</span>
+      </div>
+    </div>
+
+    <!-- Indicador de carga / escribiendo -->
+    <div *ngIf="loading" class="chat-message-wrapper">
+      <div class="chat-avatar">
+        <i class="bi bi-heart-pulse-fill"></i>
+      </div>
+      <div class="chat-bubble shadow-sm typing-bubble">
+        <div class="typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input de envío -->
+  <div class="chat-input-area p-3 border-top bg-light">
+    <div class="input-group">
+      <input type="text" [(ngModel)]="userMessage" (keyup.enter)="sendMessage()" 
+             class="form-control border-0 bg-white" placeholder="Hazme una pregunta sobre NutriScan..."
+             [disabled]="loading">
+      <button class="btn btn-success border-0 px-3 d-flex align-items-center" (click)="sendMessage()" 
+              [disabled]="loading" aria-label="Enviar mensaje">
+        <i class="bi bi-send-fill"></i>
+      </button>
+    </div>
+  </div>
+</div>

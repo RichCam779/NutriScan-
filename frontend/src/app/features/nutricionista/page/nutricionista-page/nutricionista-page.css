@@ -1,0 +1,19 @@
+.chat-scroll {
+  height: 380px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.list-group-item {
+  transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+textarea:focus {
+  box-shadow: none;
+  border: 1px solid #198754 !important;
+  background-color: #fff !important;
+}

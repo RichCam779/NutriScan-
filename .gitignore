@@ -1,0 +1,20 @@
+# Python virtual environments
+RAG/myvenv/
+RAG/venv/
+RAG/.venv/
+RAG/env/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Environment files
+RAG/.env
+
+# Node modules and Angular outputs (already handled in frontend/.gitignore, but good to have)
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/

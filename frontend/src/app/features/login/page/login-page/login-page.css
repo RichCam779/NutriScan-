@@ -1,0 +1,18 @@
+.login-sidebar {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--ns-green) 0%, #146c43 100%);
+}
+
+.btn-login {
+  transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(25, 135, 84, 0.3) !important;
+}
+
+.demo-login-panel {
+  border-style: dashed !important;
+}

@@ -1,0 +1,158 @@
+
+:root {
+  --ns-green: #198754;
+  --ns-green-light: rgba(25, 135, 84, 0.1);
+  --ns-dark: #1a1a2e;
+  --ns-dark2: #16213e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* ─── Animaciones globales ─── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(50px, 50px); }
+}
+
+@keyframes pulse {
+  0%   { transform: scale(1);    box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
+  70%  { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(25, 135, 84, 0); }
+  100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+}
+
+@keyframes pulsate {
+  0%   { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7); }
+  70%  { box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+}
+
+.slide-up         { animation: slideUp 0.8s ease forwards; }
+.fade-in-up       { animation: fadeInUp 0.8s ease forwards; }
+.delay-1          { animation-delay: 0.1s; }
+.delay-2          { animation-delay: 0.3s; }
+.delay-3          { animation-delay: 0.5s; }
+.delay-4          { animation-delay: 0.4s; }
+.delay-5          { animation-delay: 0.5s; }
+.delay-6          { animation-delay: 0.6s; }
+
+/* ─── Hover helpers ─── */
+.hover-scale {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-scale:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,.1) !important;
+}
+
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 1rem 3rem rgba(0,0,0,.1) !important;
+}
+
+.transition-all { transition: all 0.3s ease; }
+
+/* ─── Text gradient ─── */
+.text-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #198754 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─── Feature icon ─── */
+.feature-card {
+  transition: transform 0.3s ease;
+  background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+}
+.feature-card:hover { transform: translateY(-10px); }
+
+/* ─── Navbar ─── */
+.navbar {
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.navbar-brand { font-size: 1.5rem; letter-spacing: -0.5px; }
+
+/* ─── Footer ─── */
+.footer { border-top: 1px solid rgba(255,255,255,.05); }
+.hover-success:hover { color: #198754 !important; transform: translateY(-2px); }
+.status-indicator { width: 8px; height: 8px; border-radius: 50%; background-color: #198754; }
+.pulsate-green { animation: pulsate 2s infinite; }
+
+/* ─── Hero ─── */
+.hero-section { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+}
+.blob-1 {
+  width: 400px; height: 400px;
+  background: rgba(25,135,84,.4);
+  top: -100px; left: -100px;
+  animation: float 10s infinite alternate ease-in-out;
+}
+.blob-2 {
+  width: 300px; height: 300px;
+  background: rgba(13,110,253,.3);
+  bottom: -50px; right: 10%;
+  animation: float 8s infinite alternate-reverse ease-in-out;
+}
+.logo-pulse { animation: pulse 3s infinite ease-in-out; }
+.letter-spacing-2 { letter-spacing: 2px; }
+
+/* ─── Login ─── */
+.btn-login { transition: all 0.3s ease; }
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(25,135,84,.3) !important;
+}
+.login-sidebar {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+}
+.form-control:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 0.25rem rgba(25,135,84,.25);
+}
+
+/* ─── Admin / Dashboard ─── */
+.admin-container { min-height: 100vh; }
+.fade-in { animation: fadeInUp 0.6s ease forwards; }
+.fade-in-up { animation: fadeInUp 0.6s ease forwards; }
+
+/* ─── Chat scroll ─── */
+.chat-scroll { height: 380px; overflow-y: auto; scroll-behavior: smooth; }
+
+/* ─── Acerca ─── */
+.acerca-container { min-height: calc(100vh - 80px); }
+.text-justify { text-align: justify; }
+
+/* ─── Responsive ─── */
+@media (max-width: 576px) {
+  .display-3 { font-size: 2.2rem; }
+  .lead { font-size: 1.1rem !important; }
+}
