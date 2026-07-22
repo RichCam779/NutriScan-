@@ -58,7 +58,7 @@ export class NutricionistaPageComponent implements OnInit {
   }
 
   cargarPacientes(): void {
-    this.http.get<any>('http://localhost:8000/users/', { headers: this.authHeaders }).subscribe({
+    this.http.get<any>('https://nutriscan-production-fea8.up.railway.app/users/', { headers: this.authHeaders }).subscribe({
       next: (res) => {
         const todos = res.resultado || [];
         const pacientes = todos.filter((u: any) => u.rol === 'Paciente' || u.id_rol === 3);
@@ -98,7 +98,7 @@ export class NutricionistaPageComponent implements OnInit {
     this.perfilPaciente = null;
 
     // Cargar perfil clínico del paciente desde el backend
-    this.http.get<any>(`http://localhost:8000/perfiles_clinicos/usuario/${p.id}`, { headers: this.authHeaders }).subscribe({
+    this.http.get<any>(`https://nutriscan-production-fea8.up.railway.app/perfiles_clinicos/usuario/${p.id}`, { headers: this.authHeaders }).subscribe({
       next: (res) => {
         this.perfilPaciente = res.resultado;
         const pc = res.resultado;
@@ -141,7 +141,7 @@ export class NutricionistaPageComponent implements OnInit {
     });
 
     // Cargar historial de chat del paciente desde el backend
-    this.http.get<any>(`http://localhost:8000/historial_chat/usuario/${p.id}`, { headers: this.authHeaders }).subscribe({
+    this.http.get<any>(`https://nutriscan-production-fea8.up.railway.app/historial_chat/usuario/${p.id}`, { headers: this.authHeaders }).subscribe({
       next: (res) => {
         const chats = res.resultado || [];
         this.historialChat = chats.map((c: any) => ({
@@ -190,7 +190,7 @@ export class NutricionistaPageComponent implements OnInit {
         grasas_g: plan.grasas_g,
         recomendaciones: plan.recomendaciones
       }};
-      this.http.put<any>(`http://localhost:8000/perfiles_clinicos/${this.perfilPaciente.id_perfil}`, payload, { headers: this.authHeaders }).subscribe({
+      this.http.put<any>(`https://nutriscan-production-fea8.up.railway.app/perfiles_clinicos/${this.perfilPaciente.id_perfil}`, payload, { headers: this.authHeaders }).subscribe({
         next: () => console.log('Plan guardado en BD exitosamente'),
         error: (e) => console.warn('Error al guardar plan en BD:', e)
       });
@@ -198,7 +198,7 @@ export class NutricionistaPageComponent implements OnInit {
 
     // Enviar un mensaje motivacional al paciente en la BD
     const mensajePlan = `Tu nutricionista ${this.auth?.nombre || 'NutriScan'} te ha asignado un nuevo plan: ${plan.caloriasObjetivo} kcal/día. Proteínas: ${plan.proteinas_g}g, Carbohidratos: ${plan.carbohidratos_g}g, Grasas: ${plan.grasas_g}g. ${plan.recomendaciones}`;
-    this.http.post<any>(`http://localhost:8000/users/${this.pacienteSeleccionado.id}/mensajes`,
+    this.http.post<any>(`https://nutriscan-production-fea8.up.railway.app/users/${this.pacienteSeleccionado.id}/mensajes`,
       { mensaje: mensajePlan }, { headers: this.authHeaders }
     ).subscribe({ error: (e) => console.warn('Error enviando mensaje del plan:', e) });
 
@@ -233,7 +233,7 @@ export class NutricionistaPageComponent implements OnInit {
   enviarMensaje(): void {
     if (!this.mensajeMotivacional.trim() || !this.pacienteSeleccionado) return;
     this.http.post<any>(
-      `http://localhost:8000/users/${this.pacienteSeleccionado.id}/mensajes`,
+      `https://nutriscan-production-fea8.up.railway.app/users/${this.pacienteSeleccionado.id}/mensajes`,
       { mensaje: this.mensajeMotivacional },
       { headers: this.authHeaders }
     ).subscribe({
