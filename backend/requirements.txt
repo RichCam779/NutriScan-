@@ -9,7 +9,17 @@ python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
 onnxruntime
-opencv-python-headless
 numpy
-ultralytics
+opencv-python-headless
+torch
+torchvision
+pyyaml
+scipy
+matplotlib
+pillow
+tqdm
+psutil
+pandas
+seaborn
+ultralytics --no-deps
 google-auth

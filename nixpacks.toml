@@ -1,14 +1,11 @@
 providers = ["python"]
 
 [phases.setup]
-nixPkgs = ["python311"]
-aptPkgs = ["libgl1", "libglib2.0-0", "libxcb1", "libx11-xcb1", "libsm6", "libxext6"]
+nixPkgs = ["python311", "libGL", "glib"]
 
 [phases.install]
 cmds = [
-  "cd backend && pip install -r requirements.txt",
-  "pip uninstall -y opencv-python opencv-python-headless",
-  "pip install opencv-python-headless"
+  "cd backend && pip install -r requirements.txt"
 ]
 
 [start]
