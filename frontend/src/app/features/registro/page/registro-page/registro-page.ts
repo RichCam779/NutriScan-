@@ -54,7 +54,7 @@ export class RegistroPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle('NutriScan - Crear Cuenta');
-    this.http.get<any>('https://nutriscan-production-fea8.up.railway.app/users/locations').subscribe({
+    this.http.get<any>('http://localhost:8000/users/locations').subscribe({
       next: (res) => {
         this.ubicacionesTotales = res.data || [];
         this.paisesDisponibles = [...new Set(this.ubicacionesTotales.map(u => u.pais))].sort();
@@ -125,7 +125,7 @@ export class RegistroPageComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', this.fotoArchivo);
 
-    this.http.post<any>('https://nutriscan-production-fea8.up.railway.app/ai/biotype-anonymous', formData).subscribe({
+    this.http.post<any>('http://localhost:8000/ai/biotype-anonymous', formData).subscribe({
       next: (resIA) => {
         const biotipoDetectado = resIA.biotipo_detectado;
         const confianza = parseFloat(resIA.confianza.replace('%', '')) / 100.0;
@@ -147,7 +147,7 @@ export class RegistroPageComponent implements OnInit {
           estado: 'Activo'
         };
 
-        this.http.post<any>('https://nutriscan-production-fea8.up.railway.app/users/register', userRegisterPayload).subscribe({
+        this.http.post<any>('http://localhost:8000/users/register', userRegisterPayload).subscribe({
           next: () => {
             this.analizandoIA = false;
             alert(`¡Registro exitoso! La IA ha determinado que tu biotipo es: ${biotipoDetectado} (Confianza: ${(confianza * 100).toFixed(2)}%)`);

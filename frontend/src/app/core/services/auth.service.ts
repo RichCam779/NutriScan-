@@ -53,7 +53,7 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<AuthState> {
-    return this.http.post<AuthState>('https://nutriscan-production-fea8.up.railway.app/login', { email, password }).pipe(
+    return this.http.post<AuthState>('http://localhost:8000/login', { email, password }).pipe(
       tap(auth => {
         this.setUser(auth);
       })
@@ -61,7 +61,7 @@ export class AuthService {
   }
 
   loginWithGoogle(idToken: string): Observable<AuthState> {
-    return this.http.post<AuthState>('https://nutriscan-production-fea8.up.railway.app/auth/google', { id_token: idToken }).pipe(
+    return this.http.post<AuthState>('http://localhost:8000/auth/google', { id_token: idToken }).pipe(
       tap(auth => {
         this.setUser(auth);
       })

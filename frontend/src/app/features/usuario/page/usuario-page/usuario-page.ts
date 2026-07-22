@@ -127,7 +127,7 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
     if (userId && token) {
       const headers = { Authorization: `Bearer ${token}` };
       // Cargar perfil clínico
-      this.http.get<any>(`https://nutriscan-production-fea8.up.railway.app/perfiles_clinicos/usuario/${userId}`, { headers }).subscribe({
+      this.http.get<any>(`http://localhost:8000/perfiles_clinicos/usuario/${userId}`, { headers }).subscribe({
         next: (res) => {
           const p = res.resultado;
           this.perfilClinico = p;
@@ -141,7 +141,7 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
         error: (err) => console.warn('Perfil clínico no encontrado:', err)
       });
       // Cargar mensajes del nutricionista
-      this.http.get<any>(`https://nutriscan-production-fea8.up.railway.app/users/${userId}/mensajes`, { headers }).subscribe({
+      this.http.get<any>(`http://localhost:8000/users/${userId}/mensajes`, { headers }).subscribe({
         next: (res) => {
           const msgs = res.resultado || [];
           if (msgs.length) this.ds.mensajes.set(msgs.map((m: any) => ({ id: m.id, mensaje: m.mensaje, fecha: new Date(m.fecha) })));
@@ -149,7 +149,7 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
         error: (err) => console.warn('Mensajes no encontrados:', err)
       });
       // Cargar alimentos desde el backend
-      this.http.get<any>('https://nutriscan-production-fea8.up.railway.app/alimentos/', { headers }).subscribe({
+      this.http.get<any>('http://localhost:8000/alimentos/', { headers }).subscribe({
         next: (res) => {
           const alimentos = res.resultado || [];
           if (alimentos.length) {
@@ -161,7 +161,7 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
         error: (err) => console.warn('Alimentos no cargados:', err)
       });
       // Cargar historial de consumo de comida
-      this.http.get<any>(`https://nutriscan-production-fea8.up.railway.app/registro_consumo/usuario/${userId}`, { headers }).subscribe({
+      this.http.get<any>(`http://localhost:8000/registro_consumo/usuario/${userId}`, { headers }).subscribe({
         next: (res) => {
           const consumos = res.resultado || [];
           const grouped: { [fecha: string]: Comida[] } = {};
@@ -240,7 +240,7 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
         fecha_consumo: new Date().toISOString().slice(0, 10),
         tipo_comida: this.tipoComidaSeleccionado
       }};
-      this.http.post<any>('https://nutriscan-production-fea8.up.railway.app/registro_consumo/', payload,
+      this.http.post<any>('http://localhost:8000/registro_consumo/', payload,
         { headers: { Authorization: `Bearer ${token}` } }
       ).subscribe({ error: (e) => console.warn('Error al guardar consumo:', e) });
     }
@@ -267,7 +267,7 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
       const formData = new FormData();
       formData.append('file', file);
       this.http.post<any>(
-        `https://nutriscan-production-fea8.up.railway.app/ai/food-recognition/${userId}`,
+        `http://localhost:8000/ai/food-recognition/${userId}`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       ).subscribe({
@@ -358,7 +358,7 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
           fecha_consumo: new Date().toISOString().slice(0, 10),
           tipo_comida: this.tipoComidaSeleccionado
         }};
-        this.http.post<any>('https://nutriscan-production-fea8.up.railway.app/registro_consumo/', payload,
+        this.http.post<any>('http://localhost:8000/registro_consumo/', payload,
           { headers: { Authorization: `Bearer ${token}` } }
         ).subscribe({ error: (e) => console.warn('Error al guardar consumo múltiple:', e) });
       }
@@ -390,7 +390,7 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
           fecha_consumo: new Date().toISOString().slice(0, 10),
           tipo_comida: this.tipoComidaSeleccionado
         }};
-        this.http.post<any>('https://nutriscan-production-fea8.up.railway.app/registro_consumo/', payload,
+        this.http.post<any>('http://localhost:8000/registro_consumo/', payload,
           { headers: { Authorization: `Bearer ${token}` } }
         ).subscribe({ error: (e) => console.warn('Error al guardar consumo:', e) });
       }
@@ -531,7 +531,7 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
     if (userId && token) {
       // Usar el chatbot real del backend
       this.http.post<any>(
-        'https://nutriscan-production-fea8.up.railway.app/chatbot/message',
+        'http://localhost:8000/chatbot/message',
         { id_usuario: userId, mensaje: userMsg },
         { headers: { Authorization: `Bearer ${token}` } }
       ).subscribe({

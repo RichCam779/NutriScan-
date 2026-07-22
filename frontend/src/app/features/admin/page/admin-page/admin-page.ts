@@ -66,8 +66,8 @@ export class AdminPageComponent implements OnInit {
     const token = this.auth?.access;
     if (token) {
       const endpoint = this.mostrarSoloInactivos
-        ? 'https://nutriscan-production-fea8.up.railway.app/users/inactive'
-        : 'https://nutriscan-production-fea8.up.railway.app/users/';
+        ? 'http://localhost:8000/users/inactive'
+        : 'http://localhost:8000/users/';
       this.http.get<any>(endpoint, {
         headers: { Authorization: `Bearer ${token}` }
       }).subscribe({
@@ -173,7 +173,7 @@ export class AdminPageComponent implements OnInit {
           departamento: 'Cundinamarca',
           ciudad: 'Bogotá'
         };
-        this.http.post<any>('https://nutriscan-production-fea8.up.railway.app/users/', payload, {
+        this.http.post<any>('http://localhost:8000/users/', payload, {
           headers: { Authorization: `Bearer ${token}` }
         }).subscribe({
           next: (res) => {
@@ -194,7 +194,7 @@ export class AdminPageComponent implements OnInit {
           genero: this.datoActual.genero || 'Masculino',
           estado: this.datoActual.estado || 'Activo'
         };
-        this.http.put<any>(`https://nutriscan-production-fea8.up.railway.app/users/${this.datoActual.id}`, payload, {
+        this.http.put<any>(`http://localhost:8000/users/${this.datoActual.id}`, payload, {
           headers: { Authorization: `Bearer ${token}` }
         }).subscribe({
           next: () => {
@@ -223,7 +223,7 @@ export class AdminPageComponent implements OnInit {
       genero: user.genero || 'Masculino',
       estado: nuevoEstado
     };
-    this.http.put<any>(`https://nutriscan-production-fea8.up.railway.app/users/${user.id}`, payload, {
+    this.http.put<any>(`http://localhost:8000/users/${user.id}`, payload, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: () => {
