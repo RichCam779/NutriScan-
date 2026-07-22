@@ -11,8 +11,6 @@ python-multipart
 onnxruntime
 numpy<2.0.0
 opencv-python-headless
-torch
-torchvision
 pyyaml
 scipy
 matplotlib

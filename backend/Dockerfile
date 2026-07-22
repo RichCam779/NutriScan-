@@ -13,9 +13,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
+# Pre-install lightweight PyTorch CPU wheel (150MB vs 2.5GB CUDA wheel)
+RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir opencv-python-headless --force-reinstall
 
 COPY . .
 
