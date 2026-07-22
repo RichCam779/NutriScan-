@@ -1,8 +1,7 @@
 providers = ["python"]
 
 [phases.setup]
-nixPkgs = ["python311", "libGL", "glib", "xorg.libxcb", "xorg.libX11", "xorg.libXext", "xorg.libXrender"]
-aptPkgs = ["libgl1-mesa-glx", "libglib2.0-0", "libxcb1", "libx11-xcb1", "libsm6", "libxext6"]
+nixPkgs = ["python311", "libGL", "glib", "xorg.libxcb", "xorg.libX11", "xorg.libXext", "xorg.libXrender", "zlib"]
 
 [phases.install]
 cmds = ["cd backend && pip install -r requirements.txt"]
