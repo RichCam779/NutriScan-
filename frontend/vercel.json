@@ -1,4 +1,5 @@
 {
+  "outputDirectory": "dist/nutriscan-angular/browser",
   "rewrites": [
     {
       "source": "/(.*)",
