@@ -19,7 +19,7 @@ export interface AnswerResponse {
   providedIn: 'root'
 })
 export class RagService {
-  private apiUrl = 'http://localhost:8080/ask';
+  private apiUrl = 'https://nutriscan-production-fea8.up.railway.app/ask';
 
   constructor(private http: HttpClient) {}
 
