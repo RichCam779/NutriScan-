@@ -274,4 +274,153 @@ export class ReportePdfService {
 
     doc.save(`NutriScan_Reporte_General_${new Date().toISOString().slice(0, 10)}.pdf`);
   }
+
+  /**
+   * Genera y descarga el plan nutricional en PDF.
+   */
+  exportarPlanNutricional(pacienteNombre: string, plan: any): void {
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+    const primaryColor: [number, number, number] = [25, 135, 84];
+    const darkColor: [number, number, number]    = [33, 37, 41];
+    const greyColor: [number, number, number]    = [100, 100, 100];
+
+    // ── Barra superior verde ──────────────────────────────────
+    doc.setFillColor(...primaryColor);
+    doc.rect(0, 0, 210, 12, 'F');
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text('NutriScan', 15, 8);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text('Plan de Alimentación Personalizado', 44, 8);
+
+    // ── Título ────────────────────────────────────────────────
+    doc.setTextColor(...darkColor);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.text('PLAN NUTRICIONAL INDIVIDUAL', 15, 24);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(...greyColor);
+    doc.text(`Generado: ${new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' })}`, 15, 30);
+
+    // ── Línea divisora ────────────────────────────────────────
+    doc.setDrawColor(220, 220, 220);
+    doc.setLineWidth(0.5);
+    doc.line(15, 34, 195, 34);
+
+    // ── Paciente e Información General ────────────────────────
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(...primaryColor);
+    doc.text('Información del Paciente', 15, 42);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(...darkColor);
+    doc.text('Paciente:', 15, 48);
+    doc.setFont('helvetica', 'bold');
+    doc.text(pacienteNombre, 35, 48);
+
+    doc.setFont('helvetica', 'normal');
+    doc.text('Biotipo detectado:', 15, 54);
+    doc.setFont('helvetica', 'bold');
+    doc.text(plan.biotipo || 'No Definido', 50, 54);
+
+    // ── Meta Calórica (Caja Destacada) ────────────────────────
+    doc.setFillColor(240, 248, 244);
+    doc.setDrawColor(180, 220, 200);
+    doc.setLineWidth(0.5);
+    doc.rect(115, 38, 80, 20, 'FD');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...primaryColor);
+    doc.text('META ENERGÉTICA DIARIA', 120, 44);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.setTextColor(...darkColor);
+    doc.text(`${plan.meta_calorica_diaria || 2000} kcal`, 120, 52);
+
+    // ── Distribución de Macronutrientes ──────────────────────
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(...primaryColor);
+    doc.text('Distribución de Macronutrientes', 15, 70);
+
+    const macrosData = [
+      ['Macronutriente', 'Cantidad Sugerida (g)', 'Aporte Calórico Aprox.'],
+      ['Proteínas', `${plan.proteinas_g || 0} g`, `${(plan.proteinas_g || 0) * 4} kcal`],
+      ['Carbohidratos', `${plan.carbohidratos_g || 0} g`, `${(plan.carbohidratos_g || 0) * 4} kcal`],
+      ['Grasas', `${plan.grasas_g || 0} g`, `${(plan.grasas_g || 0) * 9} kcal`]
+    ];
+
+    autoTable(doc, {
+      startY: 74,
+      head: [macrosData[0]],
+      body: macrosData.slice(1),
+      headStyles: {
+        fillColor: primaryColor,
+        textColor: [255, 255, 255],
+        fontStyle: 'bold',
+        fontSize: 10,
+        halign: 'left'
+      },
+      bodyStyles: { fontSize: 9, textColor: [50, 50, 50] },
+      alternateRowStyles: { fillColor: [248, 252, 249] },
+      margin: { left: 15, right: 15 },
+      theme: 'striped'
+    });
+
+    // ── Recomendaciones Clínicas ─────────────────────────────
+    let nextY = (doc as any).lastAutoTable.finalY + 12;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(...primaryColor);
+    doc.text('Recomendaciones Específicas', 15, nextY);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(...darkColor);
+    
+    const recLines = doc.splitTextToSize(plan.recomendaciones || 'Siga una dieta balanceada rica en verduras, proteínas magras y agua. Evite los ultraprocesados y bebidas azucaradas.', 180);
+    doc.text(recLines, 15, nextY + 6);
+
+    // ── Sección de firmas ────────────────────────────────────
+    const signatureY = 230;
+    doc.setDrawColor(180, 180, 180);
+    doc.setLineWidth(0.5);
+    doc.line(20, signatureY, 80, signatureY);
+    doc.line(130, signatureY, 190, signatureY);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.text('Firma del Profesional', 35, signatureY + 4);
+    doc.text('Firma del Paciente', 148, signatureY + 4);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(...greyColor);
+    doc.text('Nutricionista Registrado', 35, signatureY + 8);
+    doc.text('Consentimiento del Paciente', 145, signatureY + 8);
+
+    // ── Pie de página ─────────────────────────────────────────
+    const totalPages = (doc.internal as any).getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(8);
+      doc.setTextColor(160, 160, 160);
+      doc.text('Plan de salud inteligente generado por NutriScan.', 15, 285);
+      doc.text(`Página ${i} de ${totalPages}`, 183, 285);
+    }
+
+    doc.save(`NutriScan_Plan_${pacienteNombre.replace(/\s+/g, '_')}.pdf`);
+  }
 }

@@ -4,6 +4,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from app.config import settings
 
+# IMPORTACIÓN CORRECTA: Traemos get_answer e initialize_chain según el mapa del archivo del profesor
 from app.rag_chain import get_answer, initialize_chain 
 
 # Configuración de registros (logs) en la consola para monitorear las peticiones
@@ -18,7 +19,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         f"¡Hola {user_name}! Bienvenido al asistente inteligente de NutriScan 🥑.\n\n"
         "Puedes hacerme cualquier pregunta técnica, nutricional o de arquitectura sobre el prototipo "
-        "y buscaré la respuesta dentro de la documentación indexada."
+        "y buscaré la respuesta dentro de la documentación indexada en ChromaDB."
     )
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):

@@ -40,142 +40,174 @@
           <i class="bi bi-box-arrow-right me-1"></i>Salir
         </button>
       </div>
-    </div>
-
-    <!-- Navegación -->
+    </div>    <!-- Navegación -->
     <div class="nav nav-pills mb-4 flex-wrap gap-2">
-      <button class="nav-link active shadow-sm rounded-pill px-4 fw-bold">
+      <button class="nav-link shadow-sm rounded-pill px-4 fw-bold"
+              [class.active]="selectedTab === 'usuarios'"
+              (click)="selectedTab = 'usuarios'">
         <i class="bi bi-people-fill me-2"></i>Gestión de Usuarios
       </button>
-      <button class="nav-link text-muted bg-white border border-light shadow-sm rounded-pill px-4 fw-bold" (click)="filtrarInactivos()">
+      <button class="nav-link shadow-sm rounded-pill px-4 fw-bold"
+              [class.active]="selectedTab === 'dashboard'"
+              (click)="selectedTab = 'dashboard'">
+        <i class="bi bi-bar-chart-line-fill me-2"></i>Dashboard PowerBI
+      </button>
+      <button *ngIf="selectedTab === 'usuarios'" class="nav-link text-muted bg-white border border-light shadow-sm rounded-pill px-4 fw-bold" (click)="filtrarInactivos()">
         <i class="bi bi-person-x-fill me-2"></i>{{ mostrarSoloInactivos ? 'Ver Todos' : 'Ver Inactivos' }}
       </button>
     </div>
 
-    <!-- Stats rápidas -->
-    <div class="row g-4 mb-4">
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3">
-          <div class="d-flex align-items-center">
-            <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-3 me-3">
-              <i class="bi bi-people fs-3"></i>
+    <!-- Gestión de Usuarios -->
+    <div *ngIf="selectedTab === 'usuarios'" class="animate-fade-in">
+      <!-- Stats rápidas -->
+      <div class="row g-4 mb-4">
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-4 p-3">
+            <div class="d-flex align-items-center">
+              <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-3 me-3">
+                <i class="bi bi-people fs-3"></i>
+              </div>
+              <div>
+                <h6 class="text-muted small mb-1">Usuarios Totales</h6>
+                <h4 class="fw-bold mb-0">{{ usuarios.length }}</h4>
+              </div>
             </div>
-            <div>
-              <h6 class="text-muted small mb-1">Usuarios Totales</h6>
-              <h4 class="fw-bold mb-0">{{ usuarios.length }}</h4>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-4 p-3">
+            <div class="d-flex align-items-center">
+              <div class="bg-success bg-opacity-10 text-success rounded-3 p-3 me-3">
+                <i class="bi bi-person-badge fs-3"></i>
+              </div>
+              <div>
+                <h6 class="text-muted small mb-1">Nutricionistas</h6>
+                <h4 class="fw-bold mb-0">{{ countByRol('Nutricionista') }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-4 p-3">
+            <div class="d-flex align-items-center">
+              <div class="bg-info bg-opacity-10 text-info rounded-3 p-3 me-3">
+                <i class="bi bi-person-check fs-3"></i>
+              </div>
+              <div>
+                <h6 class="text-muted small mb-1">Pacientes</h6>
+                <h4 class="fw-bold mb-0">{{ countByRol('Paciente') }}</h4>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3">
-          <div class="d-flex align-items-center">
-            <div class="bg-success bg-opacity-10 text-success rounded-3 p-3 me-3">
-              <i class="bi bi-person-badge fs-3"></i>
+
+      <div class="row g-4">
+        <!-- Tabla de usuarios -->
+        <div class="col-lg-8">
+          <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+            <div class="card-header bg-white border-bottom-0 p-4 d-flex justify-content-between align-items-center">
+              <h5 class="fw-bold mb-0">Control de Usuarios ({{ usuariosFiltrados.length }})</h5>
             </div>
-            <div>
-              <h6 class="text-muted small mb-1">Nutricionistas</h6>
-              <h4 class="fw-bold mb-0">{{ countByRol('Nutricionista') }}</h4>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="bg-light">
+                    <tr>
+                      <th class="ps-4 border-0">Usuario</th>
+                      <th class="border-0">Rol</th>
+                      <th class="border-0">Estado</th>
+                      <th class="border-0">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of usuariosFiltrados">
+                      <td class="ps-4">
+                        <div class="d-flex align-items-center">
+                          <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2 small fw-bold"
+                               style="width:35px;height:35px;">
+                            {{ getInitials(user.nombre) }}
+                          </div>
+                          <div>
+                            <div class="fw-bold small">{{ user.nombre }}</div>
+                            <div class="text-muted" style="font-size:0.75rem;">{{ user.email }}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span [class]="'badge bg-' + getRolBadge(user.rol) + ' bg-opacity-10 text-' + getRolBadge(user.rol) + ' px-2'">
+                          {{ user.rol }}
+                        </span>
+                      </td>
+                      <td>
+                        <span [class]="'badge bg-' + getEstadoBadge(user.estado) + ' rounded-pill px-2'">
+                          {{ user.estado }}
+                        </span>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-outline-warning rounded-pill me-1"
+                                (click)="abrirModal('usuario', user)"
+                                aria-label="Modificar" title="Modificar">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button [class]="'btn btn-sm btn-outline-' + (user.estado === 'Activo' ? 'danger' : 'success') + ' rounded-pill'"
+                                (click)="toggleEstado(user)"
+                                [attr.aria-label]="'Toggle estado de ' + user.nombre"
+                                [title]="user.estado === 'Activo' ? 'Inactivar' : 'Activar'">
+                          <i [class]="'bi ' + (user.estado === 'Activo' ? 'bi-slash-circle' : 'bi-arrow-repeat')"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr *ngIf="usuariosFiltrados.length === 0">
+                      <td colspan="4" class="text-center py-4 text-muted">
+                        No hay usuarios para mostrar.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3">
-          <div class="d-flex align-items-center">
-            <div class="bg-info bg-opacity-10 text-info rounded-3 p-3 me-3">
-              <i class="bi bi-person-check fs-3"></i>
+
+        <!-- Monitor de actividad -->
+        <div class="col-lg-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-header bg-dark text-white p-4 border-0">
+              <h5 class="fw-bold mb-0"><i class="bi bi-terminal me-2"></i>Monitor</h5>
             </div>
-            <div>
-              <h6 class="text-muted small mb-1">Pacientes</h6>
-              <h4 class="fw-bold mb-0">{{ countByRol('Paciente') }}</h4>
+            <div class="card-body p-4 bg-dark text-light font-monospace" style="font-size:0.8rem; max-height:400px; overflow-y:auto;">
+              <div *ngFor="let log of logs" class="mb-3 border-start border-2 ps-3"
+                   [class]="'border-' + log.tipo">
+                <span class="text-white-50">[{{ log.h }}]</span>
+                <span [class]="'text-' + log.tipo + ' ms-1'">{{ log.msg }}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="row g-4">
-      <!-- Tabla de usuarios -->
-      <div class="col-lg-8">
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-          <div class="card-header bg-white border-bottom-0 p-4 d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold mb-0">Control de Usuarios ({{ usuariosFiltrados.length }})</h5>
+    <!-- Dashboard PowerBI -->
+    <div *ngIf="selectedTab === 'dashboard'" class="animate-fade-in">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <div>
+            <h5 class="fw-bold mb-1"><i class="bi bi-bar-chart-fill text-primary me-2"></i>Reportes y Métricas en Tiempo Real</h5>
+            <p class="text-muted small mb-0">Visualiza el comportamiento calórico, registros de comida y estadísticas generales vinculadas a la base de datos.</p>
           </div>
-          <div class="card-body p-0">
-            <div class="table-responsive">
-              <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
-                  <tr>
-                    <th class="ps-4 border-0">Usuario</th>
-                    <th class="border-0">Rol</th>
-                    <th class="border-0">Estado</th>
-                    <th class="border-0">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let user of usuariosFiltrados">
-                    <td class="ps-4">
-                      <div class="d-flex align-items-center">
-                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2 small fw-bold"
-                             style="width:35px;height:35px;">
-                          {{ getInitials(user.nombre) }}
-                        </div>
-                        <div>
-                          <div class="fw-bold small">{{ user.nombre }}</div>
-                          <div class="text-muted" style="font-size:0.75rem;">{{ user.email }}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span [class]="'badge bg-' + getRolBadge(user.rol) + ' bg-opacity-10 text-' + getRolBadge(user.rol) + ' px-2'">
-                        {{ user.rol }}
-                      </span>
-                    </td>
-                    <td>
-                      <span [class]="'badge bg-' + getEstadoBadge(user.estado) + ' rounded-pill px-2'">
-                        {{ user.estado }}
-                      </span>
-                    </td>
-                    <td>
-                      <button class="btn btn-sm btn-outline-warning rounded-pill me-1"
-                              (click)="abrirModal('usuario', user)"
-                              aria-label="Modificar" title="Modificar">
-                        <i class="bi bi-pencil"></i>
-                      </button>
-                      <button [class]="'btn btn-sm btn-outline-' + (user.estado === 'Activo' ? 'danger' : 'success') + ' rounded-pill'"
-                              (click)="toggleEstado(user)"
-                              [attr.aria-label]="'Toggle estado de ' + user.nombre"
-                              [title]="user.estado === 'Activo' ? 'Inactivar' : 'Activar'">
-                        <i [class]="'bi bi-' + (user.estado === 'Activo' ? 'slash-circle' : 'check-circle')"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr *ngIf="usuariosFiltrados.length === 0">
-                    <td colspan="4" class="text-center py-4 text-muted">
-                      No hay usuarios para mostrar.
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <div>
+            <span class="badge bg-primary bg-opacity-10 text-primary p-2 rounded-pill fw-semibold">
+              <i class="bi bi-link-45deg me-1"></i>Conectado a PostgreSQL
+            </span>
           </div>
         </div>
-      </div>
 
-      <!-- Monitor de actividad -->
-      <div class="col-lg-4">
-        <div class="card border-0 shadow-sm rounded-4 h-100">
-          <div class="card-header bg-dark text-white p-4 border-0">
-            <h5 class="fw-bold mb-0"><i class="bi bi-terminal me-2"></i>Monitor (Simulado)</h5>
-          </div>
-          <div class="card-body p-4 bg-dark text-light font-monospace" style="font-size:0.8rem; max-height:400px; overflow-y:auto;">
-            <div *ngFor="let log of logs" class="mb-3 border-start border-2 ps-3"
-                 [class]="'border-' + log.tipo">
-              <span class="text-white-50">[{{ log.h }}]</span>
-              <span [class]="'text-' + log.tipo + ' ms-1'">{{ log.msg }}</span>
-            </div>
-          </div>
+        <!-- Contenedor del Iframe -->
+        <div class="ratio ratio-16x9 rounded-4 shadow-sm overflow-hidden border border-light" style="background-color: #f8f9fa; min-height: 500px;">
+          <iframe [src]="safePowerBiUrl"
+                  frameborder="0"
+                  allowFullScreen="true"></iframe>
         </div>
       </div>
     </div>
@@ -192,9 +224,9 @@
             <span *ngSwitchCase="'rol'">Crear Rol</span>
             <span *ngSwitchCase="'permiso'">Crear Permiso</span>
             <span *ngSwitchCase="'crear_usuario'">
-              <i class="bi bi-person-plus-fill text-success me-2"></i>Crear Nuevo Usuario (Simulado)
+              <i class="bi bi-person-plus-fill text-success me-2"></i>Crear Nuevo Usuario
             </span>
-            <span *ngSwitchDefault>Editar Usuario (Simulado)</span>
+            <span *ngSwitchDefault>Editar Usuario</span>
           </ng-container>
         </h5>
         <button type="button" class="btn-close" aria-label="Cerrar"

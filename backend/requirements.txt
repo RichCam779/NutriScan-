@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+pydantic
+email-validator
+requests
+psycopg2-binary
+python-dotenv
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+onnxruntime
+opencv-python-headless
+numpy
+ultralytics
+google-auth

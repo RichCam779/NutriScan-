@@ -34,6 +34,11 @@ class QuestionRequest(BaseModel):
         description="La pregunta a realizar al sistema RAG",
         example="¿Que vision artificial utiliza nutriscan?"
     )
+    patient_context: dict | None = Field(
+        None,
+        description="Datos opcionales del paciente (meta, consumo diario, plan nutricional)"
+    )
+
 
 class SourceDocument(BaseModel):
     """Schema para un documento fuente."""
@@ -73,23 +78,23 @@ async def lifespan(app: FastAPI):
     """
     # ── Startup ──────────────────────────────────────────────
     print("\n" + "=" * 60)
-    print("🚀 INICIANDO SERVIDOR RAG API")
+    print("INICIANDO SERVIDOR RAG API")
     print("=" * 60)
 
     try:
         initialize_chain()
-        print("✅ Servidor listo para recibir peticiones\n")
+        print("Servidor listo para recibir peticiones\n")
     except FileNotFoundError as e:
-        print(f"\n⚠️  ADVERTENCIA: {e}")
-        print("   El servidor arrancará pero /ask dará error hasta que indexes documentos.")
+        print(f"\nADVERTENCIA: {e}")
+        print("   El servidor arrancara pero /ask dara error hasta que indexes documentos.")
     except Exception as e:
-        print(f"\n❌ Error al inicializar: {e}")
+        print(f"\nError al inicializar: {e}")
         raise
 
     yield  # El servidor está corriendo aquí
 
     # ── Shutdown ─────────────────────────────────────────────
-    print("\n🛑 Cerrando servidor RAG API...")
+    print("\nCerrando servidor RAG API...")
 
 # ─────────────────────────────────────────────────────────────
 # APLICACIÓN FASTAPI
@@ -164,7 +169,7 @@ async def ask_question(request: QuestionRequest):
     start_time = time.time()
 
     try:
-        result = get_answer(request.question)
+        result = get_answer(request.question, request.patient_context)
     except RuntimeError as e:
         raise HTTPException(
             status_code=503,
@@ -200,7 +205,7 @@ async def trigger_ingestion():
     """
     from app.ingest import run_ingestion
     from app.rag_chain import initialize_chain as reinit
-    global _rag_chain
+    global rag_chain
 
     try:
         run_ingestion()

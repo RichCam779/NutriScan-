@@ -81,9 +81,16 @@
                 <i class="bi bi-clipboard2-pulse-fill text-success me-2"></i>
                 Plan Nutricional — {{ pacienteSeleccionado.nombre }}
               </h5>
-              <button class="btn btn-success rounded-pill px-3 fw-semibold btn-sm" (click)="abrirFormPlan()">
-                <i class="bi bi-plus-lg me-1"></i>{{ planExistente ? 'Actualizar Plan' : 'Crear Plan' }}
-              </button>
+              <div class="d-flex gap-2">
+                <button *ngIf="planExistente" class="btn btn-outline-success rounded-pill px-3 fw-semibold btn-sm"
+                        (click)="descargarPdfPlan()" [disabled]="generandoPdfPlan">
+                  <i class="bi bi-file-earmark-pdf me-1"></i>
+                  {{ generandoPdfPlan ? 'Generando...' : 'Descargar Plan' }}
+                </button>
+                <button class="btn btn-success rounded-pill px-3 fw-semibold btn-sm" (click)="abrirFormPlan()">
+                  <i class="bi bi-plus-lg me-1"></i>{{ planExistente ? 'Actualizar Plan' : 'Crear Plan' }}
+                </button>
+              </div>
             </div>
             <div class="card-body p-4">
 

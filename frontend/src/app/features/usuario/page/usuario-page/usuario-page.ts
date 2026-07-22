@@ -9,6 +9,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { DietaComidaService, Alimento, ChatMsg, Comida } from '../../services/dieta-comida.service';
 import { RagService } from '../../../../core/services/rag.service';
 import { ReportePdfService } from '../../../../core/services/reporte-pdf.service';
+import { HttpClient } from '@angular/common/http';
 
 export interface StepDef {
   id: number;
@@ -62,14 +63,18 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
   mostrarSelector = false;
   tipoComidaSeleccionado = '';
 
-  // Animación de escaneo (simulada)
+  // Escaneo con YOLO (real via file upload)
   escaneando = false;
-  alimentoEscaneado: Alimento | null = null;
+  alimentoEscaneado: any = null;
+  alimentosDetectadosMultiples: any[] = [];
   mostrarConfirmEscaneo = false;
+  mostrarPreguntaMultiples = false;
+  errorEscaneo = '';
 
   // ─── Reporte ────────────────────────────────────────────────
   tipoReporte: 'dia' | 'semana' | 'mes' = 'dia';
   generandoPdf = false;
+  generandoPdfPlan = false;
 
   // ─── Chat ───────────────────────────────────────────────────
   msg = '';
@@ -97,19 +102,85 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
   get metaCaloricaDiaria()          { return this.ds.metaCaloricaDiaria(); }
   set metaCaloricaDiaria(v: number) { this.ds.metaCaloricaDiaria.set(v); }
 
+  private perfilClinico: any = null;
+
   constructor(
     private authService: AuthService,
     public ds: DietaComidaService,
     private titleService: Title,
     private ragService: RagService,
     private reportePdf: ReportePdfService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
     this.titleService.setTitle('NutriScan - Mi Panel');
     this.auth = this.authService.currentUser || { nombre: 'Juan Pérez' };
     this.filtrados = [...this.ds.listadoAlimentos];
+    // Re-iniciar el chat con saludo inicial
+    this.ds.chat.set([
+      { e: 'ia', t: '¡Hola! Soy tu asistente inteligente NutriBot. ¿En qué puedo ayudarte hoy?', h: this.hora() }
+    ]);
+    const userId = this.auth?.id_usuario;
+    const token = this.auth?.access;
+    if (userId && token) {
+      const headers = { Authorization: `Bearer ${token}` };
+      // Cargar perfil clínico
+      this.http.get<any>(`http://localhost:8000/perfiles_clinicos/usuario/${userId}`, { headers }).subscribe({
+        next: (res) => {
+          const p = res.resultado;
+          this.perfilClinico = p;
+          if (p.meta_calorica_diaria) this.ds.caloriasMeta.set(p.meta_calorica_diaria);
+          if (p.meta_calorica_diaria) this.ds.metaCaloricaDiaria.set(p.meta_calorica_diaria);
+          if (p.edad) this.ds.edad.set(p.edad);
+          if (p.peso_kg) this.ds.peso_kg.set(parseFloat(p.peso_kg));
+          if (p.altura_cm) this.ds.altura_cm.set(parseFloat(p.altura_cm));
+          if (p.biotipo) this.ds.biotipo.set(p.biotipo);
+        },
+        error: (err) => console.warn('Perfil clínico no encontrado:', err)
+      });
+      // Cargar mensajes del nutricionista
+      this.http.get<any>(`http://localhost:8000/users/${userId}/mensajes`, { headers }).subscribe({
+        next: (res) => {
+          const msgs = res.resultado || [];
+          if (msgs.length) this.ds.mensajes.set(msgs.map((m: any) => ({ id: m.id, mensaje: m.mensaje, fecha: new Date(m.fecha) })));
+        },
+        error: (err) => console.warn('Mensajes no encontrados:', err)
+      });
+      // Cargar alimentos desde el backend
+      this.http.get<any>('http://localhost:8000/alimentos/', { headers }).subscribe({
+        next: (res) => {
+          const alimentos = res.resultado || [];
+          if (alimentos.length) {
+            const mapped = alimentos.map((a: any) => ({ id_alimento: a.id_alimento, nombre: a.nombre, calorias: a.calorias }));
+            this.ds.listadoAlimentos.splice(0, this.ds.listadoAlimentos.length, ...mapped);
+            this.filtrados = [...this.ds.listadoAlimentos];
+          }
+        },
+        error: (err) => console.warn('Alimentos no cargados:', err)
+      });
+      // Cargar historial de consumo de comida
+      this.http.get<any>(`http://localhost:8000/registro_consumo/usuario/${userId}`, { headers }).subscribe({
+        next: (res) => {
+          const consumos = res.resultado || [];
+          const grouped: { [fecha: string]: Comida[] } = {};
+          consumos.forEach((c: any) => {
+            const dateStr = c.fecha_consumo.slice(0, 10);
+            if (!grouped[dateStr]) grouped[dateStr] = [];
+            grouped[dateStr].push({
+              id: c.id_registro,
+              nombre: c.nombre || 'Alimento',
+              calorias: c.calorias || 0,
+              tipo: c.tipo_comida || 'Almuerzo',
+              hora: c.fecha_creacion ? new Date(c.fecha_creacion).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '12:00'
+            });
+          });
+          this.ds['_historialComidas'].set(grouped);
+        },
+        error: (err) => console.warn('Historial de consumo no cargado:', err)
+      });
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -147,6 +218,7 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
     this.mostrarSelector = true;
     this.busqueda = '';
     this.mostrarConfirmEscaneo = false;
+    this.mostrarPreguntaMultiples = false;
     this.filtrados = [...this.ds.listadoAlimentos];
   }
 
@@ -156,36 +228,202 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
     this.busqueda = '';
     this.alimentoEscaneado = null;
     this.mostrarConfirmEscaneo = false;
+    this.mostrarPreguntaMultiples = false;
+    // Persistir en el backend
+    const userId = this.auth?.id_usuario;
+    const token = this.auth?.access;
+    if (userId && token && alimento.id_alimento) {
+      const payload = { data: {
+        id_usuario: userId,
+        id_alimento: alimento.id_alimento,
+        cantidad_gramos: 100,
+        fecha_consumo: new Date().toISOString().slice(0, 10),
+        tipo_comida: this.tipoComidaSeleccionado
+      }};
+      this.http.post<any>('http://localhost:8000/registro_consumo/', payload,
+        { headers: { Authorization: `Bearer ${token}` } }
+      ).subscribe({ error: (e) => console.warn('Error al guardar consumo:', e) });
+    }
   }
 
-  // ─── Escaneo simulado de IA ──────────────────────────────────
+  // ─── Escaneo YOLO real via file input ────────────────────────
   activarEscaneo(tipo: string): void {
+    // Disparar un input file para escanear con YOLO
     this.tipoComidaSeleccionado = tipo;
-    this.escaneando = true;
-    this.mostrarConfirmEscaneo = false;
-    this.alimentoEscaneado = null;
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (event: any) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      this.errorEscaneo = '';
+      this.escaneando = true;
+      this.mostrarConfirmEscaneo = false;
+      this.mostrarPreguntaMultiples = false;
+      this.alimentoEscaneado = null;
+      this.alimentosDetectadosMultiples = [];
+      const userId = this.auth?.id_usuario;
+      const token = this.auth?.access;
+      const formData = new FormData();
+      formData.append('file', file);
+      this.http.post<any>(
+        `http://localhost:8000/ai/food-recognition/${userId}`,
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      ).subscribe({
+        next: (res) => {
+          this.escaneando = false;
+          const rawAlimentos: any[] = res.alimentos_detectados || [];
 
-    // Simula el análisis de IA (1.8 segundos)
-    setTimeout(() => {
-      const idx = Math.floor(Math.random() * this.ds.listadoAlimentos.length);
-      this.alimentoEscaneado = this.ds.listadoAlimentos[idx];
-      this.escaneando = false;
-      this.mostrarConfirmEscaneo = true;
-      this.cdr.detectChanges();
-    }, 1800);
+          // Deduplicar por nombre (YOLO puede detectar el mismo alimento varias veces)
+          const vistos = new Set<string>();
+          const unicos = rawAlimentos.filter((a: any) => {
+            const key = (a.nombre || '').toLowerCase().trim();
+            if (vistos.has(key)) return false;
+            vistos.add(key);
+            return true;
+          });
+
+          if (unicos.length > 1) {
+            // Múltiples alimentos distintos → mostrar selector
+            this.alimentosDetectadosMultiples = unicos.map((a: any) => ({
+              id_alimento: a.id_alimento || 0,
+              nombre: a.nombre,
+              calorias: a.calorias || 0,
+              cantidad: 1
+            }));
+            this.mostrarPreguntaMultiples = true;
+          } else {
+            // Un solo alimento (o el primero único)
+            const first = unicos[0] || (res.alimento_detectado ? { nombre: res.alimento_detectado, calorias: res.calorias || 0, id_alimento: res.id_alimento || 0 } : null);
+            if (first) {
+              this.alimentoEscaneado = { id_alimento: first.id_alimento || 0, nombre: first.nombre, calorias: first.calorias || 0, cantidad: 1 };
+              this.mostrarConfirmEscaneo = true;
+            } else {
+              this.errorEscaneo = 'No se detectó ningún alimento en la imagen.';
+            }
+          }
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.escaneando = false;
+          this.errorEscaneo = err.error?.detail || 'Error al analizar la imagen con YOLOv8.';
+          this.cdr.detectChanges();
+        }
+      });
+    };
+    input.click();
+  }
+
+  incrementarCantidad(item: any): void {
+    item.cantidad = (item.cantidad || 1) + 1;
+  }
+
+  decrementarCantidad(item: any): void {
+    if (item.cantidad > 1) {
+      item.cantidad--;
+    }
+  }
+
+  incrementarCantidadSimple(): void {
+    if (this.alimentoEscaneado) {
+      this.alimentoEscaneado.cantidad = (this.alimentoEscaneado.cantidad || 1) + 1;
+    }
+  }
+
+  decrementarCantidadSimple(): void {
+    if (this.alimentoEscaneado && this.alimentoEscaneado.cantidad > 1) {
+      this.alimentoEscaneado.cantidad--;
+    }
+  }
+
+  confirmarEscaneoMultiples(): void {
+    const userId = this.auth?.id_usuario;
+    const token = this.auth?.access;
+
+    this.alimentosDetectadosMultiples.forEach(item => {
+      const alimentoFinal: Alimento = {
+        id_alimento: item.id_alimento,
+        nombre: `${item.cantidad}x ${item.nombre}`,
+        calorias: item.calorias * item.cantidad
+      };
+
+      this.ds.registrarComida(alimentoFinal, this.tipoComidaSeleccionado, this.hora());
+
+      if (userId && token && item.id_alimento) {
+        const payload = { data: {
+          id_usuario: userId,
+          id_alimento: item.id_alimento,
+          cantidad_gramos: item.cantidad * 100, // 100g por unidad
+          fecha_consumo: new Date().toISOString().slice(0, 10),
+          tipo_comida: this.tipoComidaSeleccionado
+        }};
+        this.http.post<any>('http://localhost:8000/registro_consumo/', payload,
+          { headers: { Authorization: `Bearer ${token}` } }
+        ).subscribe({ error: (e) => console.warn('Error al guardar consumo múltiple:', e) });
+      }
+    });
+
+    this.mostrarPreguntaMultiples = false;
+    this.alimentosDetectadosMultiples = [];
+    setTimeout(() => this.irAPaso(2), 300);
   }
 
   confirmarEscaneo(): void {
     if (this.alimentoEscaneado) {
-      this.guardarRegistro(this.alimentoEscaneado);
-      // Avanza automáticamente al reporte
+      const cantidad = this.alimentoEscaneado.cantidad || 1;
+      const alimentoFinal: Alimento = {
+        id_alimento: this.alimentoEscaneado.id_alimento,
+        nombre: cantidad > 1 ? `${cantidad}x ${this.alimentoEscaneado.nombre}` : this.alimentoEscaneado.nombre,
+        calorias: this.alimentoEscaneado.calorias * cantidad
+      };
+
+      this.ds.registrarComida(alimentoFinal, this.tipoComidaSeleccionado, this.hora());
+      
+      const userId = this.auth?.id_usuario;
+      const token = this.auth?.access;
+      if (userId && token && alimentoFinal.id_alimento) {
+        const payload = { data: {
+          id_usuario: userId,
+          id_alimento: alimentoFinal.id_alimento,
+          cantidad_gramos: cantidad * 100,
+          fecha_consumo: new Date().toISOString().slice(0, 10),
+          tipo_comida: this.tipoComidaSeleccionado
+        }};
+        this.http.post<any>('http://localhost:8000/registro_consumo/', payload,
+          { headers: { Authorization: `Bearer ${token}` } }
+        ).subscribe({ error: (e) => console.warn('Error al guardar consumo:', e) });
+      }
+
+      this.mostrarConfirmEscaneo = false;
+      this.alimentoEscaneado = null;
       setTimeout(() => this.irAPaso(2), 300);
     }
   }
 
-  rechazarEscaneo(): void {
+  /** Vuelve a abrir el selector de archivo para escanear de nuevo */
+  volverAEscanear(): void {
     this.mostrarConfirmEscaneo = false;
+    this.mostrarPreguntaMultiples = false;
     this.alimentoEscaneado = null;
+    this.alimentosDetectadosMultiples = [];
+    this.errorEscaneo = '';
+    // Re-lanzar el escaneo con el mismo tipo de comida
+    this.activarEscaneo(this.tipoComidaSeleccionado);
+  }
+
+  /** Cancela todo y regresa al estado inicial sin escanear */
+  cancelarEscaneo(): void {
+    this.mostrarConfirmEscaneo = false;
+    this.mostrarPreguntaMultiples = false;
+    this.alimentoEscaneado = null;
+    this.alimentosDetectadosMultiples = [];
+    this.errorEscaneo = '';
+  }
+
+  /** @deprecated Use volverAEscanear() o cancelarEscaneo() */
+  rechazarEscaneo(): void {
+    this.cancelarEscaneo();
   }
 
   // ─── Perfil ──────────────────────────────────────────────────
@@ -253,53 +491,74 @@ export class UsuarioPageComponent implements OnInit, AfterViewChecked, OnDestroy
     }, 200);
   }
 
+  descargarPdfPlan(): void {
+    const plan = this.planNutricional;
+    if (!plan && !this.perfilClinico) {
+      alert('No tienes un plan nutricional asignado todavía.');
+      return;
+    }
+    this.generandoPdfPlan = true;
+    const planData = plan ? {
+      meta_calorica_diaria: plan.caloriasObjetivo,
+      proteinas_g: plan.proteinas_g,
+      carbohidratos_g: plan.carbohidratos_g,
+      grasas_g: plan.grasas_g,
+      recomendaciones: plan.recomendaciones,
+      biotipo: this.biotipo
+    } : {
+      meta_calorica_diaria: this.perfilClinico?.meta_calorica_diaria,
+      proteinas_g: this.perfilClinico?.proteinas_g || 0,
+      carbohidratos_g: this.perfilClinico?.carbohidratos_g || 0,
+      grasas_g: this.perfilClinico?.grasas_g || 0,
+      recomendaciones: this.perfilClinico?.recomendaciones,
+      biotipo: this.biotipo
+    };
+    setTimeout(() => {
+      this.reportePdf.exportarPlanNutricional(this.auth?.nombre || 'Paciente', planData);
+      this.generandoPdfPlan = false;
+    }, 200);
+  }
+
   // ─── Chat NutriBot ───────────────────────────────────────────
   enviarMensaje(): void {
     if (!this.msg.trim()) return;
     const userMsg = this.msg;
     this.ds.agregarMensajeChat({ e: 'u', t: userMsg, h: this.hora() });
     this.msg = '';
-    const low = userMsg.toLowerCase();
+    const userId = this.auth?.id_usuario;
+    const token = this.auth?.access;
 
-    if (low.includes('calorias') || low.includes('caloría') || low.includes('meta')) {
-      const rpt = this.getDatosReporte();
-      const reply = `Tu meta calórica diaria es de ${this.caloriasMeta} kcal. ` +
-        `Hoy has consumido ${this.caloriasConsumidas} kcal (${this.porcentaje}% de tu meta). ` +
-        `En los datos del ${this.labelTipoReporte} llevas ${rpt.caloriasTotales} kcal consumidas de ${rpt.caloriasMetaPeriodo} kcal meta. ¡Sigue así!`;
-      setTimeout(() => this.ds.agregarMensajeChat({ e: 'ia', t: reply, h: this.hora() }), 400);
-      return;
+    if (userId && token) {
+      // Usar el chatbot real del backend
+      this.http.post<any>(
+        'http://localhost:8000/chatbot/message',
+        { id_usuario: userId, mensaje: userMsg },
+        { headers: { Authorization: `Bearer ${token}` } }
+      ).subscribe({
+        next: (res) => this.ds.agregarMensajeChat({ e: 'ia', t: res.respuesta, h: this.hora() }),
+        error: () => {
+          // Fallback al RAG si el chatbot principal falla
+          this.ragService.askQuestion(userMsg).subscribe({
+            next: (response) => this.ds.agregarMensajeChat({ e: 'ia', t: response.answer, h: this.hora() }),
+            error: () => this.ds.agregarMensajeChat({
+              e: 'ia',
+              t: `Lo siento, tuve un error de conexión. Recuerda: tu meta es ${this.caloriasMeta} kcal y llevas ${this.caloriasConsumidas} kcal hoy.`,
+              h: this.hora()
+            })
+          });
+        }
+      });
+    } else {
+      // Sin autenticación, usar RAG directamente
+      this.ragService.askQuestion(userMsg).subscribe({
+        next: (response) => this.ds.agregarMensajeChat({ e: 'ia', t: response.answer, h: this.hora() }),
+        error: () => this.ds.agregarMensajeChat({
+          e: 'ia',
+          t: `Lo siento, tuve un error de conexión.`,
+          h: this.hora()
+        })
+      });
     }
-
-    if (low.includes('plan') || low.includes('dieta')) {
-      const p = this.planNutricional;
-      const reply = p
-        ? `Tu plan nutricional: ${p.caloriasObjetivo} kcal/día — Proteínas: ${p.proteinas_g}g, Carboh: ${p.carbohidratos_g}g, Grasas: ${p.grasas_g}g. Diseñado por ${p.nutricionistaName}.`
-        : 'Aún no tienes un plan nutricional asignado por un nutricionista.';
-      setTimeout(() => this.ds.agregarMensajeChat({ e: 'ia', t: reply, h: this.hora() }), 400);
-      return;
-    }
-
-    if (low.includes('biotipo') || low.includes('perfil') || low.includes('edad') || low.includes('peso') || low.includes('altura')) {
-      const reply = `Tu perfil: Biotipo ${this.biotipo}, Edad ${this.edad} años, Peso ${this.peso_kg} kg, Altura ${this.altura_cm} cm.`;
-      setTimeout(() => this.ds.agregarMensajeChat({ e: 'ia', t: reply, h: this.hora() }), 400);
-      return;
-    }
-
-    if (low.includes('reporte') || low.includes('historial')) {
-      const rpt = this.getDatosReporte();
-      const reply = `Tu reporte del ${this.labelTipoReporte}: consumiste ${rpt.caloriasTotales} kcal de ${rpt.caloriasMetaPeriodo} kcal meta (${rpt.porcentajePeriodo}%). Puedes ver el reporte completo en el paso 2 o descargarlo en PDF.`;
-      setTimeout(() => this.ds.agregarMensajeChat({ e: 'ia', t: reply, h: this.hora() }), 400);
-      return;
-    }
-
-    this.ragService.askQuestion(userMsg).subscribe({
-      next: (response) => this.ds.agregarMensajeChat({ e: 'ia', t: response.answer, h: this.hora() }),
-      error: () => this.ds.agregarMensajeChat({
-        e: 'ia',
-        t: `Lo siento, tuve un error de conexión. Recuerda: tu meta es ${this.caloriasMeta} kcal y llevas ${this.caloriasConsumidas} kcal hoy.`,
-        h: this.hora()
-      })
-    });
   }
 
   logout(): void { this.authService.logout(); }

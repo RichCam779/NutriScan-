@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { Title } from '@angular/platform-browser';
+import { Title, DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { AuthService } from '../../../../core/services/auth.service';
 import { UsuariosService, Usuario } from '../../services/usuarios.service';
 import { ReportePdfService } from '../../../../core/services/reporte-pdf.service';
+import { HttpClient } from '@angular/common/http';
 
 interface LogEntry { h: string; msg: string; tipo: string; }
 
@@ -20,6 +21,10 @@ export class AdminPageComponent implements OnInit {
   auth: any = null;
   usuarios: Usuario[] = [];
   usuariosFiltrados: Usuario[] = [];
+
+  selectedTab = 'usuarios';
+  // ENLACE DE POWERBI: Reemplaza este enlace por el tuyo en caso de cambiar el reporte
+  powerBiUrl = 'https://app.powerbi.com/view?r=eyJrIjoiODdmYTg0NWYtZTQzZC00M2JkLWJjMjctNGE4M2Q2ZmIwNDE3IiwidCI6IjFlOWFhYmU4LTY3ZjgtNGYxYy1hMzI5LWE3NTRlOTI0OTlhZSIsImMiOjR9';
 
   mostrandoModal = false;
   tipoModal = '';
@@ -39,8 +44,17 @@ export class AdminPageComponent implements OnInit {
     private usuariosService: UsuariosService,
     private router: Router,
     private titleService: Title,
-    private reportePdf: ReportePdfService
-  ) { }
+    private reportePdf: ReportePdfService,
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
+  ) {
+    // Sanitizar la URL una sola vez para evitar que el iframe se recargue
+    // en cada ciclo de detección de cambios de Angular
+    this.safePowerBiUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.powerBiUrl);
+  }
+
+  // URL de PowerBI sanitizada una sola vez (evita refresh infinito del iframe)
+  readonly safePowerBiUrl: SafeResourceUrl;
 
   ngOnInit(): void {
     this.titleService.setTitle('NutriScan - Administración');
@@ -49,9 +63,41 @@ export class AdminPageComponent implements OnInit {
   }
 
   sincronizarUsuarios(): void {
-    this.usuarios = [...this.usuariosService.usuarios()];
-    this.filtrarUsuarios();
+    const token = this.auth?.access;
+    if (token) {
+      const endpoint = this.mostrarSoloInactivos
+        ? 'http://localhost:8000/users/inactive'
+        : 'http://localhost:8000/users/';
+      this.http.get<any>(endpoint, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).subscribe({
+        next: (res) => {
+          const list = res.resultado || [];
+          this.usuarios = list.map((u: any) => ({
+            id: u.id,
+            nombre: u.nombre,
+            email: u.email,
+            rol: u.rol || (u.id_rol === 1 ? 'Administrador' : u.id_rol === 2 ? 'Nutricionista' : 'Paciente'),
+            estado: u.estado || 'Activo',
+            identificacion: u.identificacion,
+            genero: u.genero
+          }));
+          // Sincronizar el signal
+          this.usuariosService['_usuarios'].set(this.usuarios);
+          this.filtrarUsuarios();
+        },
+        error: (err) => {
+          console.warn('Error fetching real users, using mock fallback:', err);
+          this.usuarios = [...this.usuariosService.usuarios()];
+          this.filtrarUsuarios();
+        }
+      });
+    } else {
+      this.usuarios = [...this.usuariosService.usuarios()];
+      this.filtrarUsuarios();
+    }
   }
+
 
   filtrarUsuarios(): void {
     if (this.mostrarSoloInactivos) {
@@ -107,6 +153,7 @@ export class AdminPageComponent implements OnInit {
 
   guardarModal(): void {
     this.mensajeError = '';
+    const token = this.auth?.access;
     if (this.tipoModal === 'crear_usuario' || this.tipoModal === 'usuario') {
       if (!this.datoActual.nombre || !this.datoActual.email || !this.datoActual.identificacion) {
         this.mensajeError = 'Por favor completa todos los campos obligatorios.';
@@ -114,45 +161,82 @@ export class AdminPageComponent implements OnInit {
       }
 
       if (this.tipoModal === 'crear_usuario') {
-        const nuevoId = this.usuariosService.usuarios().length > 0 ? Math.max(...this.usuariosService.usuarios().map(u => u.id)) + 1 : 1;
-        const nuevoUsuario: Usuario = {
-          id: nuevoId,
-          nombre: this.datoActual.nombre,
+        const payload = {
+          nombre_completo: this.datoActual.nombre,
           email: this.datoActual.email,
-          rol: this.datoActual.rol,
-          estado: this.datoActual.estado || 'Activo',
           identificacion: this.datoActual.identificacion,
-          genero: this.datoActual.genero || 'Masculino'
+          password_hash: this.datoActual.password || 'Nutri123*',
+          id_rol: this.datoActual.rol === 'Administrador' ? 1 : this.datoActual.rol === 'Nutricionista' ? 2 : 3,
+          genero: this.datoActual.genero || 'Masculino',
+          estado: this.datoActual.estado || 'Activo',
+          pais: 'Colombia',
+          departamento: 'Cundinamarca',
+          ciudad: 'Bogotá'
         };
-        this.usuariosService.agregarUsuario(nuevoUsuario);
-        this.addLog(`Usuario creado: ${nuevoUsuario.nombre} (${nuevoUsuario.rol})`, 'success');
+        this.http.post<any>('http://localhost:8000/users/', payload, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).subscribe({
+          next: (res) => {
+            this.addLog(`Usuario creado: ${this.datoActual.nombre}`, 'success');
+            this.sincronizarUsuarios();
+            this.mostrandoModal = false;
+          },
+          error: (err) => {
+            this.mensajeError = err.error?.detail || 'Error al crear el usuario en el backend.';
+          }
+        });
       } else {
-        this.usuariosService.actualizarUsuario(this.datoActual);
-        this.addLog(`Usuario modificado: ${this.datoActual.nombre}`, 'warning');
+        const payload = {
+          nombre_completo: this.datoActual.nombre,
+          email: this.datoActual.email,
+          identificacion: this.datoActual.identificacion,
+          id_rol: this.datoActual.rol === 'Administrador' ? 1 : this.datoActual.rol === 'Nutricionista' ? 2 : 3,
+          genero: this.datoActual.genero || 'Masculino',
+          estado: this.datoActual.estado || 'Activo'
+        };
+        this.http.put<any>(`http://localhost:8000/users/${this.datoActual.id}`, payload, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).subscribe({
+          next: () => {
+            this.addLog(`Usuario modificado: ${this.datoActual.nombre}`, 'warning');
+            this.sincronizarUsuarios();
+            this.mostrandoModal = false;
+          },
+          error: (err) => {
+            this.mensajeError = err.error?.detail || 'Error al actualizar el usuario en el backend.';
+          }
+        });
       }
-    } else if (this.tipoModal === 'rol') {
-      if (!this.datoActual.nombre) {
-        this.mensajeError = 'Por favor indica el nombre del rol.';
-        return;
-      }
-      this.addLog(`Rol creado: ${this.datoActual.nombre}`, 'success');
-    } else if (this.tipoModal === 'permiso') {
-      if (!this.datoActual.nombre) {
-        this.mensajeError = 'Por favor indica el nombre del permiso.';
-        return;
-      }
-      this.addLog(`Permiso creado: ${this.datoActual.nombre}`, 'success');
+    } else {
+      this.mostrandoModal = false;
     }
-
-    this.sincronizarUsuarios();
-    this.mostrandoModal = false;
   }
 
   toggleEstado(user: Usuario): void {
-    this.usuariosService.toggleEstado(user.id);
+    const token = this.auth?.access;
     const nuevoEstado = user.estado === 'Activo' ? 'Inactivo' : 'Activo';
-    this.addLog(`Estado de ${user.nombre} cambiado a ${nuevoEstado}`, 'info');
-    this.sincronizarUsuarios();
+    const payload = {
+      nombre_completo: user.nombre,
+      email: user.email,
+      identificacion: user.identificacion || '',
+      id_rol: user.rol === 'Administrador' ? 1 : user.rol === 'Nutricionista' ? 2 : 3,
+      genero: user.genero || 'Masculino',
+      estado: nuevoEstado
+    };
+    this.http.put<any>(`http://localhost:8000/users/${user.id}`, payload, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).subscribe({
+      next: () => {
+        this.addLog(`Estado de ${user.nombre} cambiado a ${nuevoEstado}`, 'info');
+        this.sincronizarUsuarios();
+      },
+      error: (err) => {
+        console.warn('Error al cambiar el estado del usuario:', err);
+        // Fallback local
+        this.usuariosService.toggleEstado(user.id);
+        this.sincronizarUsuarios();
+      }
+    });
   }
 
   exportarReporteGeneral(): void {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
 
 interface Ubicacion {
   pais: string;
@@ -20,15 +21,7 @@ interface Ubicacion {
 export class RegistroPageComponent implements OnInit {
   registroForm: FormGroup;
 
-  ubicacionesTotales: Ubicacion[] = [
-    { pais: 'Colombia', departamento: 'Cundinamarca', ciudad: 'Bogotá' },
-    { pais: 'Colombia', departamento: 'Antioquia', ciudad: 'Medellín' },
-    { pais: 'Colombia', departamento: 'Valle del Cauca', ciudad: 'Cali' },
-    { pais: 'Colombia', departamento: 'Atlántico', ciudad: 'Barranquilla' },
-    { pais: 'México', departamento: 'CDMX', ciudad: 'Ciudad de México' },
-    { pais: 'México', departamento: 'Jalisco', ciudad: 'Guadalajara' },
-    { pais: 'Argentina', departamento: 'Buenos Aires', ciudad: 'Buenos Aires' }
-  ];
+  ubicacionesTotales: Ubicacion[] = [];
 
   paisesDisponibles: string[] = [];
   departamentosDisponibles: string[] = [];
@@ -42,7 +35,8 @@ export class RegistroPageComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private titleService: Title
+    private titleService: Title,
+    private http: HttpClient
   ) {
     this.registroForm = this.fb.group({
       identificacion: ['', [Validators.required]],
@@ -60,7 +54,16 @@ export class RegistroPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle('NutriScan - Crear Cuenta');
-    this.paisesDisponibles = [...new Set(this.ubicacionesTotales.map(u => u.pais))].sort();
+    this.http.get<any>('http://localhost:8000/users/locations').subscribe({
+      next: (res) => {
+        this.ubicacionesTotales = res.data || [];
+        this.paisesDisponibles = [...new Set(this.ubicacionesTotales.map(u => u.pais))].sort();
+      },
+      error: (err) => {
+        console.error('Error cargando ubicaciones:', err);
+        this.errorMessage = 'No se pudieron cargar las ubicaciones del servidor.';
+      }
+    });
   }
 
   onPaisChange(): void {
@@ -118,14 +121,48 @@ export class RegistroPageComponent implements OnInit {
     this.errorMessage = '';
     this.analizandoIA = true;
 
-    // Simular escaneo de biotipo YOLOv8
-    setTimeout(() => {
-      this.analizandoIA = false;
-      const biotipos = ['Mesomorfo', 'Ectomorfo', 'Endomorfo'];
-      const biotipoResultado = biotipos[Math.floor(Math.random() * biotipos.length)];
+    // Primero analizamos el biotipo de forma anónima
+    const formData = new FormData();
+    formData.append('file', this.fotoArchivo);
 
-      alert(`¡Registro exitoso! La IA ha determinado que tu biotipo es: ${biotipoResultado} (Visión YOLOv8 simulada correctamente)`);
-      this.router.navigate(['/login']);
-    }, 2500);
+    this.http.post<any>('http://localhost:8000/ai/biotype-anonymous', formData).subscribe({
+      next: (resIA) => {
+        const biotipoDetectado = resIA.biotipo_detectado;
+        const confianza = parseFloat(resIA.confianza.replace('%', '')) / 100.0;
+
+        // Ahora registramos el usuario en el backend con el biotipo analizado
+        const formVal = this.registroForm.value;
+        const userRegisterPayload = {
+          nombre_completo: formVal.nombreCompleto,
+          email: formVal.email,
+          identificacion: formVal.identificacion,
+          genero: formVal.genero,
+          pais: formVal.pais,
+          departamento: formVal.departamento,
+          ciudad: formVal.ciudad,
+          password_hash: formVal.password, // El backend realiza el hashing
+          id_rol: 3, // Rol de Paciente por defecto
+          biotipo: biotipoDetectado,
+          confianza_ia: confianza,
+          estado: 'Activo'
+        };
+
+        this.http.post<any>('http://localhost:8000/users/register', userRegisterPayload).subscribe({
+          next: () => {
+            this.analizandoIA = false;
+            alert(`¡Registro exitoso! La IA ha determinado que tu biotipo es: ${biotipoDetectado} (Confianza: ${(confianza * 100).toFixed(2)}%)`);
+            this.router.navigate(['/login']);
+          },
+          error: (errReg) => {
+            this.analizandoIA = false;
+            this.errorMessage = errReg.error?.detail || 'Error al crear la cuenta del usuario.';
+          }
+        });
+      },
+      error: (errIA) => {
+        this.analizandoIA = false;
+        this.errorMessage = errIA.error?.detail || 'Error en la visión artificial al analizar tu biotipo corporal.';
+      }
+    });
   }
 }

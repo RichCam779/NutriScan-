@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "powerbi-client-angular": "^6.0.3"
+  }
+}

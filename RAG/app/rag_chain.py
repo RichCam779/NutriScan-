@@ -86,12 +86,50 @@ def initialize_chain():
 
     print("[Chain] Pipeline RAG listo")
 
-def get_answer(question: str) -> dict:
+def get_answer(question: str, patient_context: dict = None) -> dict:
     if _chain is None:
         raise RuntimeError("La cadena RAG no está inicializada.")
 
     source_documents = _retriever.invoke(question)
-    answer = _chain.invoke(question)
+    
+    if patient_context:
+        docs_text = format_docs(source_documents)
+        alimentos_list = patient_context.get("alimentos_hoy", [])
+        alimentos_str = ", ".join(alimentos_list) if alimentos_list else "Ninguno registrado aún"
+        
+        patient_info = f"""Información del Paciente:
+- Nombre: {patient_context.get('nombre', 'Paciente')}
+- Meta Calórica Diaria: {patient_context.get('meta_calorica', 0)} kcal
+- Calorías Consumidas Hoy: {patient_context.get('consumido_hoy', 0)} kcal
+- Alimentos Consumidos Hoy: {alimentos_str}
+- Plan Nutricional Activo:
+  * Proteínas: {patient_context.get('plan_proteinas', 0)}g
+  * Carbohidratos: {patient_context.get('plan_carbohidratos', 0)}g
+  * Grasas: {patient_context.get('plan_grasas', 0)}g
+  * Recomendaciones: {patient_context.get('plan_recomendaciones', 'Ninguna')}
+  * Asignado por Nutricionista: {patient_context.get('plan_nutricionista', 'No asignado')}"""
+
+        prompt_text = f"""Eres un asistente nutricional experto para la aplicación NutriScan.
+Responde de manera amable, clara y profesional en Español.
+
+Usa el contexto de los documentos de NutriScan y la información del paciente proporcionada a continuación para responder la pregunta del usuario.
+Si el usuario pregunta sobre su meta, consumos de hoy, o plan nutricional, usa la "Información del Paciente" proporcionada para darle una respuesta exacta y personalizada.
+Si pregunta algo general sobre nutrición o la aplicación, utiliza el "Contexto de Documentos".
+Intenta relacionar amigablemente ambos contextos si es pertinente.
+
+{patient_info}
+
+Contexto de Documentos:
+{docs_text}
+
+Pregunta: {question}
+
+Respuesta:"""
+
+        llm = get_llm()
+        answer = llm.invoke(prompt_text).content
+    else:
+        answer = _chain.invoke(question)
 
     sources = []
     for doc in source_documents:
@@ -105,3 +143,4 @@ def get_answer(question: str) -> dict:
         "answer": answer.strip(),
         "sources": sources,
     }
+
