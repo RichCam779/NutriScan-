@@ -9,7 +9,7 @@ python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
 onnxruntime
-numpy
+numpy<2.0.0
 opencv-python-headless
 torch
 torchvision
