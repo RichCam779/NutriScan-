@@ -24,7 +24,7 @@ export class AdminPageComponent implements OnInit {
 
   selectedTab = 'usuarios';
   // ENLACE DE POWERBI: Reemplaza este enlace por el tuyo en caso de cambiar el reporte
-  powerBiUrl = 'https://app.powerbi.com/view?r=eyJrIjoiODdmYTg0NWYtZTQzZC00M2JkLWJjMjctNGE4M2Q2ZmIwNDE3IiwidCI6IjFlOWFhYmU4LTY3ZjgtNGYxYy1hMzI5LWE3NTRlOTI0OTlhZSIsImMiOjR9';
+  powerBiUrl = 'https://app.powerbi.com/view?r=eyJrIjoiY2ExOGFjOGYtNjMzNC00OTJiLThjYTMtYWQ4ODY0OTIzYTVkIiwidCI6IjFlOWFhYmU4LTY3ZjgtNGYxYy1hMzI5LWE3NTRlOTI0OTlhZSIsImMiOjR9';
 
   mostrandoModal = false;
   tipoModal = '';
